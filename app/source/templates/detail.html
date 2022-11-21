@@ -1,0 +1,174 @@
+
+{% load md5url %}
+<html>
+<header>
+</header>
+<head>
+  <title>Aichi Works（仮）-計画詳細:{{ OrderNb }}</title>
+  <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% md5url 'css/style.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+  <script>
+    $(document).ready( function () {
+      $('.table').attr('style', 'width: 100%;');
+      
+      var table = 
+          $('.table').DataTable({
+            "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Japanese.json"
+          },
+            displayLength: 10,
+            // 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+            scrollX: true,
+            // 件数切替機能 無効
+            lengthChange: false,
+            // 検索機能 無効
+            searching: false,
+            // ソート機能 無効
+            ordering: false,
+            // 情報表示 無効
+            info: false,
+            // ページング機能 無効
+            paging: false
+        });
+        $(window).on('resize', function(){
+          table.columns.adjust();
+        });
+     
+      });
+</script>
+</head>
+<body>
+  <div class="wrapper-detail">
+    <h1><a href="">計画詳細</a> <span class="status">状況：{{ Status }}</span></h1>
+    <div class="inner-detail">
+      <section>
+        <p>計画書番号：{{ OrderNb }}</p>
+        <p>担当営業：{{ UserNm }}</p>
+        <p>取引先名：{{ CodeNm }} {{ CustomerIp }}</p>
+        <p>品名：{{ ArticleNm }}</p>
+        <p>数量：{{ Quantity }} {{ QuantityUn }}</p>
+        <p>サイズ：{{ Standard }}</p>
+        <p>色：{{ ColorCn }} ( {{ ColorPr }} )</p>
+        <p>印刷機：{{ Process_instructionsMc }} {% if Process_instructionsMcIp != '' %} ( {{ Process_instructionsMcIp }} ) {% endif %}</p>
+        <p>制作担当：{{ Process_instructionsPd }} {% if Process_instructionsPdIp != '' %} ( {{ Process_instructionsPdIp }} ) {% endif %}</p>
+        <p>種別：{{ Classification }}</p>
+      </section>
+
+      <section>
+        <h2>進行予定</h2>
+        <table class="table" id="processtable">
+          <thead>
+            <tr>
+              <th>制作</th>
+              <th>外部</th>
+              <th>内校</th>
+              <th>初校</th>
+              <th>修正</th>
+              <th>二校</th>
+              <th>刷版</th>
+              <th>印刷</th>
+              <th>断裁</th>
+              <th>製本・加工</th>
+              <th>帯留・梱包</th>
+              <th>納品日</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{% if ProductionDt == '1951/11/01' %} - {% else %} {{ ProductionDt }} {% endif %}</td>
+              <td>{% if OutsideDt == '1951/11/01' %} - {% else %} {{ OutsideDt }} {% endif %}</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>{% if PlateDt == '1951/11/01' %} - {% else %} {{ PlateDt }} {% endif %}</td>
+              <td>{% if PrintDt == '1951/11/01' %} - {% else %} {{ PrintDt }} {% endif %}</td>
+              <td>{% if CuttingDt == '1951/11/01' %} - {% else %} {{ CuttingDt }} {% endif %} 
+                {% if CuttingCt != '' %} ( {{ CuttingCt }} ) {% endif %}</td>
+              <td>{% if BookbindingDt == '1951/11/01' %} - {% else %} {{ BookbindingDt }} {% endif %}
+                {% if BookbindingCt != '' %} ( {{ BookbindingCt }} ) {% endif %}</td>
+              <td>{% if PackingDt == '1951/11/01' %} - {% else %} {{ PackingDt }} {% endif %}
+                {% if PackingCt != '' %} ( {{ PackingCt }} ) {% endif %}</td>
+              <td>{% if DeliveryDt == '1951/11/01' %} - {% else %} {{ DeliveryDt }} {% endif %} {{ DeliveryTm }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section-mid-width">
+        <h2>納品関係</h2>
+        <p class="detail-delevery-row"><span>配送先：{{ Delivery }}</span><span>{{ DeliveryRm }}</span></p>
+        <p class="detail-delevery-row"><span>本体納品：{% if DeliveryDt == '1951/11/01' %} - {% else %} {{ DeliveryDt }} {% endif %} {{ DeliveryTm }}</span>
+          <span>配送担当：{{ Distributor }} {% if Distributor_Ip != '' %}({{ Distributor_Ip }}){% endif %}</span>
+          <span>発送日：{% if ShipmentDt == '1951/11/01' %} - {% else %} {{ ShipmentDt }} {% endif %}</span>
+        </p>
+        <p class="detail-delevery-row"><span>見本納品：{% if Sample_deliveryDt == '1951/11/01' %} - {% else %} {{ Sample_deliveryDt }} {% endif %} {{ Sample_deliveryTm }}</span>
+          <span>配送担当：{{ Sample_distributor }} {% if Sample_distributorIp != '' %}({{ Sample_distributorIp }}){% endif %}</span>
+          <span>発送日：{% if Sample_shipmentDt == '1951/11/01' %} - {% else %} {{ Sample_shipmentDt }} {% endif %}</span>
+        </p>
+        <p class="detail-delevery-row"><span>折込日1：{% if Insert1Dt == '1951/11/01' %} - {% else %} {{ Insert1Dt }} {% endif %}</span></p>
+        <p class="detail-delevery-row"><span>折込日2：{% if Insert2Dt == '1951/11/01' %} - {% else %} {{ Insert2Dt }} {% endif %}</span></p>
+      </section>
+
+      <section class="section-mid-width">
+        <h2>製本</h2>
+        <p>{{ Bookbinding }}</p>
+      </section>
+
+      <section>
+        <h2>用紙：{{ Paper }}</h2>
+        <table class="table" id="papertable">
+          <thead>
+            <tr>
+              <th>規格（判）</th>
+              <th>紙質</th>
+              <th>斤量</th>
+              <th>目</th>
+              <th>実数</th>
+              <th>予備</th>
+              <th>総数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{% if Standard1 == '' %} - {% else %} {{ Standard1 }} {% endif %}</td>
+              <td>{% if Quality1 == '' %} - {% else %} {{ Quality1 }} {% endif %}</td>
+              <td>{% if Weight1 == '' %} - {% else %} {{ Weight1 }} {% endif %}</td>
+              <td>{% if Grain1 == '' %} - {% else %} {{ Grain1 }} {% endif %}</td>
+              <td>{% if Real1 == '' %} - {% else %} {{ Real1 }} {% endif %}</td>
+              <td>{% if Spare1 == '' %} - {% else %} {{ Spare1 }} {% endif %}</td>
+              <td>{% if Total1 == '' %} - {% else %} {{ Total1 }} {% endif %}</td>
+            </tr>
+            <tr>
+              <td>{% if Standard2 == '' %} - {% else %} {{ Standard2 }} {% endif %}</td>
+              <td>{% if Quality2 == '' %} - {% else %} {{ Quality2 }} {% endif %}</td>
+              <td>{% if Weight2 == '' %} - {% else %} {{ Weight2 }} {% endif %}</td>
+              <td>{% if Grain2 == '' %} - {% else %} {{ Grain2 }} {% endif %}</td>
+              <td>{% if Real2 == '' %} - {% else %} {{ Real2 }} {% endif %}</td>
+              <td>{% if Spare2 == '' %} - {% else %} {{ Spare2 }} {% endif %}</td>
+              <td>{% if Total2 == '' %} - {% else %} {{ Total2 }} {% endif %}</td>
+            </tr>
+            <tr>
+              <td>{% if Standard3 == '' %} - {% else %} {{ Standard3 }} {% endif %}</td>
+              <td>{% if Quality3 == '' %} - {% else %} {{ Quality3 }} {% endif %}</td>
+              <td>{% if Weight3 == '' %} - {% else %} {{ Weight3 }} {% endif %}</td>
+              <td>{% if Grain3 == '' %} - {% else %} {{ Grain3 }} {% endif %}</td>
+              <td>{% if Real3 == '' %} - {% else %} {{ Real3 }} {% endif %}</td>
+              <td>{% if Spare3 == '' %} - {% else %} {{ Spare3 }} {% endif %}</td>
+              <td>{% if Total3 == '' %} - {% else %} {{ Total3 }} {% endif %}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section-mid-width">
+        <h2>備考</h2>
+        <p>{{ Remarks }}</p>
+      </section>
+
+    </div>
+  </div>
+</body>
+</html>

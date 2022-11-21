@@ -1,0 +1,5 @@
+*__pycache__
+database/data/*
+*txt
+.env
+app/source/firstSite/secrets.py

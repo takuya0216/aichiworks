@@ -1,0 +1,73 @@
+
+{% load md5url %}
+<html>
+<head>
+  <title>Aichi Works</title>
+  <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+  <script>
+      $(document).ready( function () {
+          $('#table').attr('style', 'width: 100%;');
+          var table = $('#table').DataTable({
+            "language": {
+              "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Japanese.json"
+            },
+              displayLength: 25,
+              autowidth: false,
+              columnDefs: [
+              // 1列目を消す(visibleをfalseにすると消えます)
+              { targets: 0, visible: false },
+              { targets: 3, width: "7%" },
+              { targets: 4, width: "12%" },
+              { targets: 5, width: "25%" },
+              { targets: [6,7,10,11,12], width: "5%" },
+              
+              ],
+              // 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
+              //scrollX: true,
+              // 縦スクロールバーを有効にする (scrollYは200, "200px"など「最大の高さ」を指定します)
+              //scrollY: 1000
+          });
+          $(window).on('resize', function(){
+            table.columns.adjust();
+          });
+      });
+  </script>
+  <script src="{% md5url 'js/script.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% md5url 'css/style.css' %}" />
+</head>
+<body>
+  <div class="wrapper-detail">
+    <h1 class="title"><a href="">Aichi Works</a><span>ver1.0</span></h1>
+    <div class="inner-detail">
+      <div class="do-not-print">
+        <h2>絞り込み検索</h2>
+        <p> <span>※最大で過去1年分を表示</span></p>
+        <form id="searchtable" method="POST">
+          {% csrf_token %}
+          <p class="searchtable-row"> {{ form.orderNum.label_tag}} {{ form.orderNum }} </p>
+          <ul class="date-range searchtable-row">
+            <li>{{ form.plateDt_start.label_tag }} {{ form.plateDt_start }}〜</li>
+            <li>{{ form.plateDt_end }}</li>
+          </ul>
+          <ul class="date-range searchtable-row">
+            <li>{{ form.printDt_start.label_tag }} {{ form.printDt_start }}〜</li>
+            <li>{{ form.printDt_end }}</li>
+          </ul>
+          <ul class="dijital-team searchtable-row">
+            <li>{{ form.checkBox_system | safe }} {{ form.checkBox_system.label_tag }}</li>
+            <li>{{ form.checkBox_design | safe }} {{ form.checkBox_design.label_tag }}</li>
+            <li>{{ form.checkBox_redbaron | safe }} {{ form.checkBox_redbaron.label_tag }}</li>
+            <li>{{ form.checkBox_aeon | safe }} {{ form.checkBox_aeon.label_tag }}</li>
+            <li>{{ form.checkBox_gaibu | safe }} {{ form.checkBox_gaibu.label_tag }}</li>
+            <li>{{ form.checkBox_outsource | safe }} {{ form.checkBox_outsource.label_tag }}</li>
+          </ul>
+          <button class="search-btn" type="submit">検索</button>
+        </form>
+      </div>
+      {{ table|safe }}
+    </div>
+  </div>
+</body>
+</html>
