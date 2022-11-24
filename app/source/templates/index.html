@@ -8,6 +8,7 @@
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
   <script>
       $(document).ready( function () {
+        
           $('#table').attr('style', 'width: 100%;');
           var table = $('#table').DataTable({
             "language": {
@@ -42,27 +43,65 @@
     <h1 class="title"><a href="">Aichi Works</a><span>ver1.0</span></h1>
     <div class="inner-detail">
       <div class="do-not-print">
-        <h2>絞り込み検索</h2>
-        <p> <span>※最大で過去1年分を表示</span></p>
+        <h2>検索条件を指定</h2>
         <form id="searchtable" method="POST">
           {% csrf_token %}
-          <p class="searchtable-row"> {{ form.orderNum.label_tag}} {{ form.orderNum }} </p>
-          <ul class="date-range searchtable-row">
-            <li>{{ form.plateDt_start.label_tag }} {{ form.plateDt_start }}〜</li>
-            <li>{{ form.plateDt_end }}</li>
-          </ul>
-          <ul class="date-range searchtable-row">
-            <li>{{ form.printDt_start.label_tag }} {{ form.printDt_start }}〜</li>
-            <li>{{ form.printDt_end }}</li>
-          </ul>
-          <ul class="dijital-team searchtable-row">
-            <li>{{ form.checkBox_system | safe }} {{ form.checkBox_system.label_tag }}</li>
-            <li>{{ form.checkBox_design | safe }} {{ form.checkBox_design.label_tag }}</li>
-            <li>{{ form.checkBox_redbaron | safe }} {{ form.checkBox_redbaron.label_tag }}</li>
-            <li>{{ form.checkBox_aeon | safe }} {{ form.checkBox_aeon.label_tag }}</li>
-            <li>{{ form.checkBox_gaibu | safe }} {{ form.checkBox_gaibu.label_tag }}</li>
-            <li>{{ form.checkBox_outsource | safe }} {{ form.checkBox_outsource.label_tag }}</li>
-          </ul>
+          <div class="search-category">
+            <div class="search-head"><p>検索期間</p></div>
+            <ul class="data-range select-button searchtable-row">
+              <li class="data-range-item"> {{ form.checkBox_all | safe }} {{ form.checkBox_all.label_tag }}</li>
+              <li class="data-range-item"> {{ form.checkBox_year | safe }} {{ form.checkBox_year.label_tag }}</li>
+              <li class="data-range-item"> {{ form.checkBox_half_year | safe }} {{ form.checkBox_half_year.label_tag }}</li>
+            </ul>
+          </div>
+          <div class="search-category">
+            <p class="search-head">{{ form.orderNum.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.orderNum }} </p>
+          </div>
+          <div class="search-category">
+            <p class="search-head">{{ form.plateDt_start.label_tag }}</p>
+            <ul class="date-range searchtable-row">
+              <li>{{ form.plateDt_start }}〜</li>
+              <li>{{ form.plateDt_end }}</li>
+            </ul>
+          </div>
+          <div class="search-category">
+            <p class="search-head">{{ form.printDt_start.label_tag }}</p>
+            <ul class="date-range searchtable-row">
+              <li>{{ form.printDt_start }}〜</li>
+              <li>{{ form.printDt_end }}</li>
+            </ul>
+          </div>
+          <div class="search-category">
+            <p class="search-head">制作担当</p>
+            <ul class="dijital-team select-button searchtable-row">
+              <li>{{ form.checkBox_system | safe }} {{ form.checkBox_system.label_tag }}</li>
+              <li>{{ form.checkBox_design | safe }} {{ form.checkBox_design.label_tag }}</li>
+              <li>{{ form.checkBox_redbaron | safe }} {{ form.checkBox_redbaron.label_tag }}</li>
+              <li>{{ form.checkBox_aeon | safe }} {{ form.checkBox_aeon.label_tag }}</li>
+              <li>{{ form.checkBox_gaibu | safe }} {{ form.checkBox_gaibu.label_tag }}</li>
+              <li>{{ form.checkBox_outsource | safe }} {{ form.checkBox_outsource.label_tag }}</li>
+              <li>{{ form.checkBox_noproduction | safe }} {{ form.checkBox_noproduction.label_tag }}</li>
+              <li>{{ form.checkBox_others | safe }} {{ form.checkBox_others.label_tag }}</li>
+            </ul>
+          </div>
+          <div class="search-category">
+            <p class="search-head">印刷機</p>
+            <ul class="dijital-printer select-button searchtable-row">
+              <li>{{ form.checkBox_rinten | safe }} {{ form.checkBox_rinten.label_tag }}</li>
+              <li>{{ form.checkBox_kikuzen | safe }} {{ form.checkBox_kikuzen.label_tag }}</li>
+              <li>{{ form.checkBox_kikuhan | safe }} {{ form.checkBox_kikuhan.label_tag }}</li>
+              <li>{{ form.checkBox_pod | safe }} {{ form.checkBox_pod.label_tag }}</li>
+              <li>{{ form.checkBox_inkjet | safe }} {{ form.checkBox_inkjet.label_tag }}</li>
+              <li>{{ form.checkBox_print_multi | safe }} {{ form.checkBox_print_multi.label_tag }}</li>
+              <li>{{ form.checkBox_print_outsource | safe }} {{ form.checkBox_print_outsource.label_tag }}</li>
+              <li>{{ form.checkBox_noprint | safe }} {{ form.checkBox_noprint.label_tag }}</li>
+              <li>{{ form.checkBox_futou | safe }} {{ form.checkBox_futou.label_tag }}</li>
+              <li>{{ form.checkBox_print_meishi | safe }} {{ form.checkBox_print_meishi.label_tag }}</li>
+              <li>{{ form.checkBox_shinohara | safe }} {{ form.checkBox_shinohara.label_tag }}</li>
+              <li>{{ form.checkBox_print_others | safe }} {{ form.checkBox_print_others.label_tag }}</li>
+            </ul>
+          </div>
           <button class="search-btn" type="submit">検索</button>
         </form>
       </div>

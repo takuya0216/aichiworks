@@ -1,6 +1,7 @@
 /*基本*/
 body{
     color: #222;
+    font-size: 1rem;
 }
 
 a{
@@ -29,6 +30,7 @@ h1{
     background: #0ec5b3;/*背景色*/
     padding: 0.5em;/*文字まわり（上下左右）の余白*/
     margin-bottom: 1em;
+    font-size: 1.423em;
 }
 
 h1 a{
@@ -42,20 +44,31 @@ h2{
     padding: 0.5em;/*文字周りの余白*/
     background: #fffae5;/*背景色*/
     border-left: solid 5px #ffe97b;/*左線（実線 太さ 色）*/
+    font-size: 1.265em;
 }
 
+h3.search-head{
+    margin-bottom: .5em;
+    font-size: 1.125em;
+}
+
+/*
 input[type="checkbox"] {
     display: none;
 }
+*/
 
+/*
 input[type="checkbox"]:checked + label {
     background: #00809d;
     color: #fff;
 }
+*/
 
 /*共通*/
 .wrapper-detail {
     padding: 1vh 1.5vw;
+    margin-bottom: 3em;
 }
 .inner-detail {
     padding: 0 0.7vw;
@@ -77,8 +90,34 @@ input[type="checkbox"]:checked + label {
     align-self: flex-end;
 }
 
+.search-category{
+    display: flex;
+    column-gap: 1em;
+    min-height: 4em;
+    border: 1px solid #e3e3e3;
+    border-bottom: 0;
+}
+.search-category:last-of-type{
+    border: 1px solid #e3e3e3;
+}
+
+.search-head{
+    display: flex;
+    background: #e3e3e3;
+    width: 10%;
+    min-width: 7em;
+    align-items: center;
+    padding-left: 1%;
+    font-size: 0.889em;
+    margin: 0;
+}
+
 .searchtable-row {
-    margin-bottom: 1.3em;
+    position: relative;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 ul.date-range {
@@ -96,22 +135,31 @@ div#table_filter,div#table_length {
     margin-bottom: 0.2em;
 }
 
-ul.dijital-team {
+ul.select-button{
     display: flex;
     gap: 1em;
 }
 
-ul.dijital-team label {
+ul.select-button input[type="checkbox"] {
+    display: none;
+}
+
+ul.select-button input[type="checkbox"]:checked + label{
+    background: #00809d;
+    color: #fff;
+}
+
+ul.select-button label{
     display: inline-block;
     border-radius: 20px;
     text-align: center;
     text-decoration: none;
     border: solid 1px #ccc;
     transition: 0.25s;
-    padding: 6px 18px;
+    padding: 4px 14px;
     cursor: pointer;
-    font-size: 0.8em;
-    margin: 3px;
+    font-size: 0.790em;
+    /*margin: 3px;*/
  }
 
 #searchtable{
@@ -140,10 +188,6 @@ table#table {
 
 .checkmark:hover svg{
     opacity: .6;
-}
-
-.search-btn{
-    font-size: 1em;
 }
 
 /*detail*/

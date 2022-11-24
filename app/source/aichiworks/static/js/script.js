@@ -9,5 +9,17 @@ $(function() {
         $(this).parent().addClass('bg-yellow')
       }
   });
+
+  var data_range_chkbox = $(".data-range-item input[type='checkbox']")
+
+  $(data_range_chkbox).on('click', function() {
+      valid_checkbox($(this))
+  });
+  
+  function valid_checkbox(checkbox) {
+    var checkbox_clicked = $(checkbox).prop('checked');
+    data_range_chkbox.prop('checked', false);
+      if (checkbox_clicked) $(checkbox).prop('checked', true);
+  }
 });
 

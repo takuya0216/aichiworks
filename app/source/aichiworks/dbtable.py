@@ -13,11 +13,12 @@ HEADERNAMES = {"IssueDt": "発行日", "Status":"状況" ,"UserNm": "担当営�
                 "Sample_deliveryTm":"見本納品時刻", "Sample_distributor":"見本配送", "Sample_distributorIp":"備考【見本配送】", "Sample_shipmentDt":"見本発送日", "Insert1Dt":"折込日1",
                 "Insert2Dt":"折込日2", "Bookbinding":"製本・加工方法", "Remarks":"備考"}
 
-TEAMLIST = ['外部', 'システム', 'デザイン', 'RB', 'デジタルA', '外注']
+TABLEHEADER = ["IssueDt", "OrderNb", "UserNm", "CodeNm", "ArticleNm","Standard", "ColorCn", "PlateDt", "PrintDt", "Process_instructionsMc", "Process_instructionsPd", "Status"]
+TEAMLIST = ['外部', 'システム', 'デザイン', 'RB', 'デジタルA', '外注', '制作なし', 'その他']
+PRINTERLIST = ['オフリン', '菊全', '菊半', 'オンデマンド', 'インクジェット', '複数あり（右記）','外注', '印刷なし', '封筒機','名刺機','シノハラ','その他']
 ACCESSDBPATH = "./aichiworks/data/Database.accdb"
 DBTABLENAME = "T_DataList"
 
-#ヘッダーを日本語化
 def translate_head(dataframe: pd.DataFrame):
     header_list = list(dataframe.columns.values)
     df_tr = dataframe
@@ -27,14 +28,16 @@ def translate_head(dataframe: pd.DataFrame):
 
     return df_tr
 
-def getLastyearDateTime():
+def get_lastyear_datetime():
     lastyear = datetime.datetime.now() - relativedelta(years=1)
-    lastyear = lastyear.strftime('%Y-%m-%d')
     return lastyear
-    #print(lastyear)
 
-def getTodayDateTime():
-    return datetime.datetime.now().strftime('%Y-%m-%d')
+def get_halfyear_datetime():
+    halfyear = datetime.datetime.now() - relativedelta(days=182)
+    return halfyear
+
+def format_datetime(datetime):
+    datetime = datetime.strftime('%Y-%m-%d')
 
 #不正値の変換やデータ型を揃える
 #日付:datetime、不正値='1951/11/01 00:00:00'（あいち印刷創業日）
@@ -42,7 +45,7 @@ def getTodayDateTime():
 #Bookbinding：'nan'を'なし'
 #計画書システム側の修正が必要
 #Weight、Spare、Real、Totalは自由入力ぽい。0と％のみを''に、その他はそのまま使用。データの扱いは文字列とする。
-def formatDataframe(dataframe: pd.DataFrame):
+def format_dataframe(dataframe: pd.DataFrame):
     dataframe.loc[dataframe['IssueDt'] == "01/00/00 00:00:00", 'IssueDt'] = '1951/11/01 00:00:00'
     dataframe.loc[dataframe['PlateDt'] == "01/00/00 00:00:00", 'PlateDt'] = '1951/11/01 00:00:00'
     dataframe.loc[dataframe['PrintDt'] == "01/00/00 00:00:00", 'PrintDt'] = '1951/11/01 00:00:00'
@@ -119,8 +122,8 @@ def formatDataframe(dataframe: pd.DataFrame):
     return dataframe
 
 #チェックボックスのクエリーから、テーブル表示するチーム名リストを取得する
-def getTeamListFromQuery(gaibu :bool, system :bool, design :bool,
-    readbaron :bool, aeon :bool, outsource :bool):
+def get_teamlist_form_query(gaibu :bool, system :bool, design :bool,
+    readbaron :bool, aeon :bool, outsource :bool, noproduction :bool, others :bool):
 
     teamlist = []
 
@@ -136,74 +139,141 @@ def getTeamListFromQuery(gaibu :bool, system :bool, design :bool,
        teamlist.append(TEAMLIST[4])
     if(outsource):
        teamlist.append(TEAMLIST[5])
+    if(noproduction):
+       teamlist.append(TEAMLIST[6])
+    if(others):
+       teamlist.append(TEAMLIST[7])
     
     return teamlist
 
-def getDataframeFormAccdb(dbPath, tableName):
-   return formatDataframe(mdb.read_table(dbPath, tableName))
+#PRINTERLIST = ['オフリン', '菊全', '菊半', 'オンデマンド', 'インクジェット', '複数あり（右記）','外注','印刷なし','封筒機','名刺機','シノハラ']
+def get_printerlist_form_query(rinten :bool, kikuzen :bool, kikuhan :bool, pod :bool, inkjet :bool,
+    print_multi :bool, print_outsource :bool, noprint :bool, futou :bool, meishi :bool, shinohara :bool, others :bool):
 
-# accessDBからqueryを使ってテーブルHTMLを生成。view.pyで出力。
+    printer_list = []
+
+    if(rinten):
+       printer_list.append(PRINTERLIST[0])
+    if(kikuzen):
+       printer_list.append(PRINTERLIST[1])
+    if(kikuhan):
+       printer_list.append(PRINTERLIST[2])
+    if(pod):
+       printer_list.append(PRINTERLIST[3])
+    if(inkjet):
+       printer_list.append(PRINTERLIST[4])
+    if(print_multi):
+       printer_list.append(PRINTERLIST[5])
+    if(print_outsource):
+       printer_list.append(PRINTERLIST[6])
+    if(noprint):
+       printer_list.append(PRINTERLIST[7])
+    if(futou):
+       printer_list.append(PRINTERLIST[8])
+    if(meishi):
+       printer_list.append(PRINTERLIST[9])
+    if(shinohara):
+       printer_list.append(PRINTERLIST[10])
+    if(others):
+        printer_list.append(PRINTERLIST[11])
+    
+    return printer_list
+
+def get_dataframe_from_accdb(dbPath, tableName):
+   return format_dataframe(mdb.read_table(dbPath, tableName))
+
+def get_limited_timerange_dataframe(df, query):
+    lastyear = get_lastyear_datetime()
+    halfyear = get_halfyear_datetime()
+
+    if query['checkBox_year']:   
+        df = df[df['IssueDt'] >= lastyear]
+    elif query['checkBox_half_year']:
+        df = df[df['IssueDt'] >= halfyear]
+    return df
+
+def query_daterange(key, start_datetime, end_datetime, dataframe):
+    if (start_datetime != '') ^ (end_datetime != ''):
+        #どちらか一方のみ
+        if start_datetime != '':
+            dataframe = dataframe[dataframe[key] >= start_datetime]
+        else:
+            dataframe = dataframe[dataframe[key] <= end_datetime]
+    elif (start_datetime != '') and (end_datetime != ''):
+        #範囲
+        dataframe = dataframe[
+            (dataframe[key] >= start_datetime) &
+            (dataframe[key] <= end_datetime)
+        ]
+    return dataframe
+
+def init_dbtable():
+    df_top = pd.DataFrame(columns=TABLEHEADER)
+    df_top = df_top.drop('IssueDt', axis=1)
+    df_top = translate_head(df_top)
+    return df_top.to_html(table_id="table")
+
 def generate_dbtable(query):    
-    df = getDataframeFormAccdb(ACCESSDBPATH, DBTABLENAME)
+    df = get_dataframe_from_accdb(ACCESSDBPATH, DBTABLENAME)
 
 #前処理  
-    
-    #topページ用に列制限
-    df_top = df[[ "IssueDt", "OrderNb", "UserNm", "CodeNm", "ArticleNm",
-                "Standard", "ColorCn", "PlateDt", "PrintDt", "Process_instructionsMc", "Process_instructionsPd", "Status"]]
-    #今日から一年前までに制限
-    query_datetime = getLastyearDateTime()
-    df_top = df_top[df_top['IssueDt'] >= query_datetime]
+    df_top = df[TABLEHEADER]
+    df_top = get_limited_timerange_dataframe(df_top, query)
     df_top = df_top.drop('IssueDt', axis=1)
-    #降順ソート
-    #df_top = df_top.sort_values(by='IssueDt', ascending=False)
-
     
 #クエリー処理
-
     #計画書番号
     if query['orderNum'] != '':
         df_top = df_top[df_top['OrderNb'] == query['orderNum']]
 
     #刷版日
-    if (query['plateDt_start'] != '') ^ (query['plateDt_end'] != ''):
-        #どちらか一方のみ
-        if query['plateDt_start'] != '':
-            df_top = df_top[df_top['PlateDt'] >= query['plateDt_start']]
-        else:
-            df_top = df_top[df_top['PlateDt'] <= query['plateDt_end']]
-    elif (query['plateDt_start'] != '') and (query['plateDt_end'] != ''):
-        #範囲
-        df_top = df_top[
-            (df_top['PlateDt'] >= query['plateDt_start']) &
-            (df_top['PlateDt'] <= query['plateDt_end'])
-        ]
+    df_top = query_daterange('PlateDt', query['plateDt_start'], query['plateDt_end'], df_top)
 
     #印刷日
-    if (query['printDt_start'] != '') ^ (query['printDt_end'] != ''):
-        #どちらか一方のみ
-        if query['printDt_start'] != '':
-            df_top = df_top[df_top['PrintDt'] >= query['printDt_start']]
-        else:
-            df_top = df_top[df_top['PrintDt'] <= query['printDt_end']]
-    elif (query['printDt_start'] != '') and (query['printDt_end'] != ''):
-        #範囲
-        df_top = df_top[
-            (df_top['PrintDt'] >= query['printDt_start']) &
-            (df_top['PrintDt'] <= query['printDt_end'])
-        ]
+    df_top = query_daterange('PrintDt', query['printDt_start'], query['printDt_end'], df_top)
     
     #チーム
     df_team_others = df_top[~df_top['Process_instructionsPd'].isin(TEAMLIST)]
-
-    if query['checkBox_gaibu'] or query['checkBox_system'] or query['checkBox_design'] or query['checkBox_redbaron'] or query['checkBox_aeon'] or query['checkBox_outsource'] :
-        teamlist = getTeamListFromQuery(query['checkBox_gaibu'], query['checkBox_system'],
-            query['checkBox_design'], query['checkBox_redbaron'], query['checkBox_aeon'], query['checkBox_outsource'])
-        df_top = df_top[df_top['Process_instructionsPd'].isin(teamlist)]
-        df_top = pd.concat([df_top, df_team_others],axis=0)
+    if(query['checkBox_gaibu'] or query['checkBox_system'] or query['checkBox_design'] or query['checkBox_others'] or
+        query['checkBox_redbaron'] or query['checkBox_aeon'] or query['checkBox_outsource'] or query['checkBox_noproduction']):
+        teamlist = get_teamlist_form_query(
+            query['checkBox_gaibu'], query['checkBox_system'],
+            query['checkBox_design'], query['checkBox_redbaron'],
+            query['checkBox_aeon'], query['checkBox_outsource'], 
+            query['checkBox_noproduction'], query['checkBox_others'])
+        if teamlist == ['その他']:
+            df_top = df_top[~df_top['Process_instructionsPd'].isin(TEAMLIST)]
+        elif len(teamlist) >= 2 and 'その他' in teamlist:
+            df_top = df_top[df_top['Process_instructionsPd'].isin(teamlist)]
+            df_top = pd.concat([df_top, df_team_others], axis=0)
+        else:
+            df_top = df_top[df_top['Process_instructionsPd'].isin(teamlist)]
+   
+        
+    #印刷機
+    df_printer_others = df_top[~df_top['Process_instructionsMc'].isin(PRINTERLIST)]
+    if(query['checkBox_rinten'] or query['checkBox_kikuhan'] or query['checkBox_kikuzen'] or query['checkBox_pod'] 
+    or query['checkBox_futou'] or query['checkBox_inkjet'] or query['checkBox_print_multi'] or query['checkBox_print_outsource'] 
+    or query['checkBox_print_meishi'] or query['checkBox_noprint'] or query['checkBox_shinohara'] or query['checkBox_print_others']):
+        # get_printerlist_form_query(rinten :bool, kikuzen :bool, kikuhan :bool, pod :bool, inkjet :bool,
+        # print_multi :bool, print_outsource :bool, noprint :bool, futou :bool, meishi :bool, shinohara :bool):
+        printerlist = get_printerlist_form_query(
+            query['checkBox_rinten'], query['checkBox_kikuzen'],
+            query['checkBox_kikuhan'], query['checkBox_pod'],
+            query['checkBox_inkjet'], query['checkBox_print_multi'],
+            query['checkBox_print_outsource'], query['checkBox_noprint'],
+            query['checkBox_futou'], query['checkBox_print_meishi'],
+            query['checkBox_shinohara'], query['checkBox_print_others'])
+        if printerlist == ['その他']:
+            df_top = df_top[~df_top['Process_instructionsMc'].isin(PRINTERLIST)]
+        elif len(printerlist) >= 2 and 'その他' in printerlist:
+            df_top = df_top[df_top['Process_instructionsMc'].isin(printerlist)]
+            df_top = pd.concat([df_top, df_printer_others], axis=0)
+        else:
+            df_top = df_top[df_top['Process_instructionsMc'].isin(printerlist)]
+            df_top = df_top[df_top['Process_instructionsMc'].isin(printerlist)]
     
 #後処理
-    
     df_top = translate_head(df_top)
     df_top.insert(0, '', '')
 
