@@ -19,16 +19,12 @@
               columnDefs: [
               // 1列目を消す(visibleをfalseにすると消えます)
               { targets: 0, visible: false },
-              { targets: 3, width: "7%" },
-              { targets: 4, width: "12%" },
-              { targets: 5, width: "25%" },
-              { targets: [6,7,10,11,12], width: "5%" },
-              
+              { targets: 4, width: "7%" },
+              { targets: 5, width: "12%" },
+              { targets: 6, width: "25%" },
+              { targets: [7,8,11,12,13], width: "5%" },
               ],
-              // 横スクロールバーを有効にする (scrollXはtrueかfalseで有効無効を切り替えます)
-              //scrollX: true,
-              // 縦スクロールバーを有効にする (scrollYは200, "200px"など「最大の高さ」を指定します)
-              //scrollY: 1000
+              "order": [[ 1, "desc" ]] ,
           });
           $(window).on('resize', function(){
             table.columns.adjust();
@@ -68,7 +64,7 @@
         <form id="searchtable" method="POST">
           {% csrf_token %}
           <div class="search-category">
-            <div class="search-head"><p>検索期間</p></div>
+            <div class="search-head"><p>検索期間<br>（発行日）</p></div>
             <ul class="data-range select-button searchtable-row">
               <li class="data-range-item"> {{ form.checkBox_all | safe }} {{ form.checkBox_all.label_tag }}</li>
               <li class="data-range-item"> {{ form.checkBox_year | safe }} {{ form.checkBox_year.label_tag }}</li>

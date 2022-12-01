@@ -205,7 +205,7 @@ input[type="checkbox"]:checked + label {
     display: flex;
     background: #e3e3e3;
     width: 10%;
-    min-width: 7em;
+    min-width: 10%;
     align-items: center;
     padding-left: 1%;
     font-size: 0.889em;

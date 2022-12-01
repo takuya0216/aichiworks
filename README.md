@@ -21,7 +21,7 @@ $ docker-compose up -d
 
 ## IP and Port setting
 edit docker-compose.yml and app/firstSite/secret.py<br>
-default IP and Port is 192.168.1.156 and 8081<br>
+default IP and Port is 192.168.1.12 and 8081<br>
 
 ### docker-compse.yml > ports and command
 ```docker
@@ -55,9 +55,9 @@ services:
 
 ### app/firstSite/secrets.py > ALLOWED_HOSTS
 ```python
-ALLOWED_HOSTS = ["192.168.1.156"]
+ALLOWED_HOSTS = ["192.168.1.12"]
 ```
 
 ### Access
 
-[`192.168.1.156:8081`](http://192.168.1.156:8081)
+[`192.168.1.12:8081`](http://192.168.1.12:8081)

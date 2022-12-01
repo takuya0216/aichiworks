@@ -18,6 +18,7 @@ TEAMLIST = ['外部', 'システム', 'デザイン', 'RB', 'デジタルA', '�
 PRINTERLIST = ['オフリン', '菊全', '菊半', 'オンデマンド', 'インクジェット', '複数あり（右記）','外注', '印刷なし', '封筒機','名刺機','シノハラ','その他']
 ACCESSDBPATH = "./aichiworks/data/Database.accdb"
 DBTABLENAME = "T_DataList"
+DEFAULTTIMESTR = "1951/11/01 00:00:00"
 
 def translate_head(dataframe: pd.DataFrame):
     header_list = list(dataframe.columns.values)
@@ -46,21 +47,21 @@ def format_datetime(datetime):
 #計画書システム側の修正が必要
 #Weight、Spare、Real、Totalは自由入力ぽい。0と％のみを''に、その他はそのまま使用。データの扱いは文字列とする。
 def format_dataframe(dataframe: pd.DataFrame):
-    dataframe.loc[dataframe['IssueDt'] == "01/00/00 00:00:00", 'IssueDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['PlateDt'] == "01/00/00 00:00:00", 'PlateDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['PrintDt'] == "01/00/00 00:00:00", 'PrintDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['ProductionDt'] == "01/00/00 00:00:00", 'ProductionDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['OutsideDt'] == "01/00/00 00:00:00", 'OutsideDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['CuttingDt'] == "01/00/00 00:00:00", 'CuttingDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['BookbindingDt'] == "01/00/00 00:00:00", 'BookbindingDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['PackingDt'] == "01/00/00 00:00:00", 'PackingDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['DeliveryDt'] == "01/00/00 00:00:00", 'DeliveryDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['ShipmentDt'] == "01/00/00 00:00:00", 'ShipmentDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['Sample_deliveryDt'] == "01/00/00 00:00:00", 'Sample_deliveryDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['Sample_shipmentDt'] == "01/00/00 00:00:00", 'Sample_shipmentDt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['Insert1Dt'] == "01/00/00 00:00:00", 'Insert1Dt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['Insert2Dt'] == "01/00/00 00:00:00", 'Insert2Dt'] = '1951/11/01 00:00:00'
-    dataframe.loc[dataframe['RequestDt'] == "01/00/00 00:00:00", 'RequestDt'] = '1951/11/01 00:00:00'
+    dataframe.loc[dataframe['IssueDt'] == "01/00/00 00:00:00", 'IssueDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['PlateDt'] == "01/00/00 00:00:00", 'PlateDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['PrintDt'] == "01/00/00 00:00:00", 'PrintDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['ProductionDt'] == "01/00/00 00:00:00", 'ProductionDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['OutsideDt'] == "01/00/00 00:00:00", 'OutsideDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['CuttingDt'] == "01/00/00 00:00:00", 'CuttingDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['BookbindingDt'] == "01/00/00 00:00:00", 'BookbindingDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['PackingDt'] == "01/00/00 00:00:00", 'PackingDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['DeliveryDt'] == "01/00/00 00:00:00", 'DeliveryDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['ShipmentDt'] == "01/00/00 00:00:00", 'ShipmentDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['Sample_deliveryDt'] == "01/00/00 00:00:00", 'Sample_deliveryDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['Sample_shipmentDt'] == "01/00/00 00:00:00", 'Sample_shipmentDt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['Insert1Dt'] == "01/00/00 00:00:00", 'Insert1Dt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['Insert2Dt'] == "01/00/00 00:00:00", 'Insert2Dt'] = DEFAULTTIMESTR
+    dataframe.loc[dataframe['RequestDt'] == "01/00/00 00:00:00", 'RequestDt'] = DEFAULTTIMESTR
     dataframe["IssueDt"] = pd.to_datetime(dataframe["IssueDt"])
     dataframe["PlateDt"] = pd.to_datetime(dataframe["PlateDt"])
     dataframe["PrintDt"] = pd.to_datetime(dataframe["PrintDt"])
@@ -146,6 +147,11 @@ def get_teamlist_form_query(gaibu :bool, system :bool, design :bool,
     
     return teamlist
 
+def get_defaultTime_df(dataframe, key):
+
+    return dataframe[dataframe[key] == DEFAULTTIMESTR]
+
+
 #PRINTERLIST = ['オフリン', '菊全', '菊半', 'オンデマンド', 'インクジェット', '複数あり（右記）','外注','印刷なし','封筒機','名刺機','シノハラ']
 def get_printerlist_form_query(rinten :bool, kikuzen :bool, kikuhan :bool, pod :bool, inkjet :bool,
     print_multi :bool, print_outsource :bool, noprint :bool, futou :bool, meishi :bool, shinohara :bool, others :bool):
@@ -186,13 +192,17 @@ def get_limited_timerange_dataframe(df, query):
     lastyear = get_lastyear_datetime()
     halfyear = get_halfyear_datetime()
 
+    #01/00/00 00:00:00（1951/11/01 00:00:00）は含める
+    defalt_date_df = get_defaultTime_df(df, 'IssueDt')
+
     if query['checkBox_year']:   
         df = df[df['IssueDt'] >= lastyear]
     elif query['checkBox_half_year']:
         df = df[df['IssueDt'] >= halfyear]
-    return df
+    return pd.concat([df, defalt_date_df], axis=0)
 
 def query_daterange(key, start_datetime, end_datetime, dataframe):
+
     if (start_datetime != '') ^ (end_datetime != ''):
         #どちらか一方のみ
         if start_datetime != '':
@@ -205,11 +215,11 @@ def query_daterange(key, start_datetime, end_datetime, dataframe):
             (dataframe[key] >= start_datetime) &
             (dataframe[key] <= end_datetime)
         ]
+
     return dataframe
 
 def init_dbtable():
     df_top = pd.DataFrame(columns=TABLEHEADER)
-    df_top = df_top.drop('IssueDt', axis=1)
     df_top = translate_head(df_top)
     return df_top.to_html(table_id="table")
 
@@ -219,8 +229,7 @@ def generate_dbtable(query):
 #前処理  
     df_top = df[TABLEHEADER]
     df_top = get_limited_timerange_dataframe(df_top, query)
-    df_top = df_top.drop('IssueDt', axis=1)
-    
+
 #クエリー処理
     #計画書番号
     if query['orderNum'] != '':
@@ -291,7 +300,7 @@ def generate_dbtable(query):
         nt.append(nt2)
         td.append(nt)
    
-    tds = table.select('tr > td:nth-of-type(2)')
+    tds = table.select('tr > td:nth-of-type(3)')
     for td in tds:
         td_text = td.string
         td.string = ""
