@@ -304,7 +304,7 @@ def generate_dbtable(query):
     for td in tds:
         td_text = td.string
         td.string = ""
-        nt = soup.new_tag('a', href='./' + td_text, target='blank')
+        nt = soup.new_tag('a', href='/' + td_text, target='_blank',rel='noopener noreferrer')
         nt.string = td_text
         td.append(nt)
 
