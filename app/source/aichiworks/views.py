@@ -7,7 +7,8 @@ from .dbtable import generate_dbtable, get_dataframe_from_accdb,init_dbtable,DBT
 
 def index(request):
   params = {
-    'plateDt_start':'', 'plateDt_end':'', 'printDt_start':'', 'printDt_end':'', 'orderNum':'',
+    'plateDt_start':'', 'plateDt_end':'',
+    'printDt_start':'', 'printDt_end':'', 'orderNum':'',
     'checkBox_gaibu':'', 'checkBox_system':'', 'checkBox_design':'', 'checkBox_redbaron':'', 
     'checkBox_aeon':'', 'checkBox_outsource':'', 'checkBox_noproduction':'', 'checkBox_others':'',
     'checkBox_all':'', 'checkBox_year': '','checkBox_half_year':'', 'checkBox_rinten': '',
@@ -22,10 +23,10 @@ def index(request):
     params['checkBox_half_year'] = 'checkBox_half_year' in request.POST
 
     params['orderNum'] = request.POST['orderNum']
-    params['plateDt_start'] = request.POST['plateDt_start']
-    params['plateDt_end'] = request.POST['plateDt_end']
     params['printDt_start'] = request.POST['printDt_start']
     params['printDt_end'] = request.POST['printDt_end']
+    params['plateDt_start'] = request.POST['plateDt_start']
+    params['plateDt_end'] = request.POST['plateDt_end']
 
     params['checkBox_gaibu'] = 'checkBox_gaibu' in request.POST
     params['checkBox_system'] = 'checkBox_system' in request.POST

@@ -23,8 +23,6 @@ class queryForm(forms.Form):
   orderNum = forms.CharField(
     label='計画書No',
     label_suffix='',
-    max_length = 13,
-    min_length = 8,
     required = False,
     widget=forms.TextInput(
       attrs={'placeholder':'H99999999'})

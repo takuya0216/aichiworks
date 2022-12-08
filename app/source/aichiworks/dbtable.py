@@ -13,7 +13,7 @@ HEADERNAMES = {"IssueDt": "発行日", "Status":"状況" ,"UserNm": "担当営�
                 "Sample_deliveryTm":"見本納品時刻", "Sample_distributor":"見本配送", "Sample_distributorIp":"備考【見本配送】", "Sample_shipmentDt":"見本発送日", "Insert1Dt":"折込日1",
                 "Insert2Dt":"折込日2", "Bookbinding":"製本・加工方法", "Remarks":"備考"}
 
-TABLEHEADER = ["IssueDt", "OrderNb", "UserNm", "CodeNm", "ArticleNm","Standard", "ColorCn", "PlateDt", "PrintDt", "Process_instructionsMc", "Process_instructionsPd", "Status"]
+TABLEHEADER = ["IssueDt", "OrderNb", "UserNm", "CodeNm", "ArticleNm","Standard", "ColorCn", "PlateDt" ,"PrintDt", "Process_instructionsMc", "Process_instructionsPd", "Status"]
 TEAMLIST = ['外部', 'システム', 'デザイン', 'RB', 'デジタルA', '外注', '制作なし', 'その他']
 PRINTERLIST = ['オフリン', '菊全', '菊半', 'オンデマンド', 'インクジェット', '複数あり（右記）','外注', '印刷なし', '封筒機','名刺機','シノハラ','その他']
 ACCESSDBPATH = "./aichiworks/data/Database.accdb"
@@ -218,9 +218,12 @@ def query_daterange(key, start_datetime, end_datetime, dataframe):
 
     return dataframe
 
-def init_dbtable():
+def get_emptytable():
     df_top = pd.DataFrame(columns=TABLEHEADER)
-    df_top = translate_head(df_top)
+    return df_top
+
+def init_dbtable():
+    df_top = translate_head(get_emptytable())
     return df_top.to_html(table_id="table")
 
 def generate_dbtable(query):    
@@ -236,11 +239,22 @@ def generate_dbtable(query):
         df_top = df_top[df_top['OrderNb'] == query['orderNum']]
 
     #刷版日
-    df_top = query_daterange('PlateDt', query['plateDt_start'], query['plateDt_end'], df_top)
-
+    df_plate = df_top
+    if (query['plateDt_start'] != '' or query['plateDt_end'] != ''):
+        df_plate = query_daterange('PlateDt', query['plateDt_start'], query['plateDt_end'], df_top)
     #印刷日
-    df_top = query_daterange('PrintDt', query['printDt_start'], query['printDt_end'], df_top)
+    df_print = df_top
+    if (query['printDt_start'] != '' or query['printDt_end'] != ''):
+        df_print = query_daterange('PrintDt', query['printDt_start'], query['printDt_end'], df_top)
     
+    if not df_print.equals(df_top) and not df_plate.equals(df_top):
+        df_top = pd.concat([df_plate, df_print], axis=0)
+        df_top = df_top[~df_top.index.duplicated(keep='first')]
+    elif not df_print.equals(df_top) and df_plate.equals(df_top):
+        df_top = df_print
+    elif df_print.equals(df_top) and not df_plate.equals(df_top):
+        df_top = df_plate
+
     #チーム
     df_team_others = df_top[~df_top['Process_instructionsPd'].isin(TEAMLIST)]
     if(query['checkBox_gaibu'] or query['checkBox_system'] or query['checkBox_design'] or query['checkBox_others'] or
@@ -281,6 +295,8 @@ def generate_dbtable(query):
         else:
             df_top = df_top[df_top['Process_instructionsMc'].isin(printerlist)]
             df_top = df_top[df_top['Process_instructionsMc'].isin(printerlist)]
+
+    
     
 #後処理
     df_top = translate_head(df_top)

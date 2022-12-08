@@ -27,7 +27,7 @@ section{
 }
 
 h1{
-    background: #0ec5b3;/*背景色*/
+    background: #55cbbf;/*背景色*/
     padding: 0.5em;/*文字まわり（上下左右）の余白*/
     margin-bottom: 1em;
     font-size: 1.423em;
@@ -51,19 +51,6 @@ h3.search-head{
     margin-bottom: .5em;
     font-size: 1.125em;
 }
-
-/*
-input[type="checkbox"] {
-    display: none;
-}
-*/
-
-/*
-input[type="checkbox"]:checked + label {
-    background: #00809d;
-    color: #fff;
-}
-*/
 
 /*共通*/
 .wrapper-detail {
@@ -272,6 +259,13 @@ ul.select-button label{
 
 table#table {
     font-size: .9em;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+table.dataTable * {
+    border: none;
 }
 
 #table thead{
@@ -288,6 +282,12 @@ table#table {
 
 .checkmark:hover svg{
     opacity: .6;
+}
+
+.button_wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0;
 }
 
 /*detail*/
