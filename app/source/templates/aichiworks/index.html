@@ -37,6 +37,16 @@
             $('#loading-overlay').removeClass('unloaded')
           });
 
+          $("#samedata_btn_plate").on('click', function(){
+            $("input[id='id_printDt_start']").val($("input[id='id_plateDt_start']").val())
+            $("input[id='id_printDt_end']").val($("input[id='id_plateDt_end']").val())
+          });
+
+          $("#samedata_btn_print").on('click', function(){
+            $("input[id='id_plateDt_start']").val($("input[id='id_printDt_start']").val())
+            $("input[id='id_plateDt_end']").val($("input[id='id_printDt_end']").val())
+          });
+
           $('#search_btn').on('click', function(){
             $('#loading-overlay').addClass('unloaded')
             $('#loading-overlay').removeClass('loaded')
@@ -46,7 +56,6 @@
             $("input[type='checkbox']").prop('checked', false)
             $("input[type='text']").val("")
             $("input[type='date']").val("")
-
           });
       })
   </script>
@@ -76,8 +85,9 @@
             <div class="search-head"><p>検索期間<br>（発行日）</p></div>
             <ul class="data-range select-button searchtable-row">
               <li class="data-range-item"> {{ form.checkBox_all | safe }} {{ form.checkBox_all.label_tag }}</li>
-              <li class="data-range-item"> {{ form.checkBox_year | safe }} {{ form.checkBox_year.label_tag }}</li>
               <li class="data-range-item"> {{ form.checkBox_half_year | safe }} {{ form.checkBox_half_year.label_tag }}</li>
+              <li class="data-range-item"> {{ form.checkBox_year | safe }} {{ form.checkBox_year.label_tag }}</li>
+              <li class="data-range-item"> {{ form.checkBox_today | safe }} {{ form.checkBox_today.label_tag }}</li>
             </ul>
           </div>
           <div class="search-category">
@@ -89,6 +99,7 @@
             <ul class="date-range searchtable-row">
               <li>{{ form.plateDt_start }}〜</li>
               <li>{{ form.plateDt_end }}</li>
+              <li><button id="samedata_btn_plate" class="samedate-btn" type="button">印刷日に設定</button></li>
             </ul>
           </div>
           <div class="search-category">
@@ -96,6 +107,7 @@
             <ul class="date-range searchtable-row">
               <li>{{ form.printDt_start }}〜</li>
               <li>{{ form.printDt_end }}</li>
+              <li><button id="samedata_btn_print" class="samedate-btn" type="button">刷版日に設定</button></li>
             </ul>
           </div>
           <div class="search-category">

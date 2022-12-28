@@ -1,0 +1,129 @@
+
+{% load md5url %}
+<html>
+<head>
+  <title>RB Works</title>
+  <link rel="stylesheet" type="text/css" href="{% md5url 'css/style.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="{% md5url 'js/script.js' %}"></script>
+  
+</head>
+<body>
+  <!--
+  <div id="loading-overlay">
+    <div class="sk-chase">
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+      <div class="sk-chase-dot"></div>
+    </div>
+  </div>
+  -->
+  <div class="wrapper-detail">
+    
+    <h1 class="title"><a href="">RB Works</a><span>ver1.0</span></h1>
+    <div class="inner-detail">
+      <h2>配付種別</h2>
+      <ul>
+        {% for obj in distoributionType %}
+          <li>{{ obj.distribution_type_id }}</li>
+          <li>{{ obj.distribution_type_name }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>定休日</h2>
+      <ul>
+        {% for obj in shopHoliday %}
+          <li>{{ obj.shopHoliday_id }}</li>
+          <li>{{ obj.shopHoliday_name }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>印刷業者</h2>
+      <ul>
+        {% for obj in printer %}
+          <li>{{ obj.printer_id }}</li>
+          <li>{{ obj.printer_name }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>サービス告知欄</h2>
+      <ul>
+        {% for obj in service %}
+          <li>{{ obj.service_id }}</li>
+          <li>{{ obj.service_no }}</li>
+          <li>{{ obj.service_size }}</li>
+          <li>{{ obj.service_tieup }}</li>
+          <li>{{ obj.service_name }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>納品先</h2>
+      <ul>
+        {% for obj in destination %}
+          <li>{{ obj.destination_id }}</li>
+          <li>{{ obj.destination_name }}</li>
+          <li>{{ obj.destination_post }}</li>
+          <li>{{ obj.destination_address }}</li>
+          <li>{{ obj.destination_tell }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>店別納品設定</h2>
+      <ul>
+        {% for obj in deliverySetting %}
+          <li>{{ obj.setting_id }}</li>
+          <li>{{ obj.shop_id }}</li>
+          <li>{{ obj.destination_id }}</li>
+          <li>{{ obj.distoribution_type_id }}</li>
+          <li>{{ obj.folding }}</li>
+          <li>{{ obj.notes }}</li>
+          <li>{{ obj.arrive_offset }}</li>
+          <li>{{ obj.shipp_offset }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>店舗</h2>
+      <ul>
+        {% for obj in shop %}
+          <li>{{ obj.shop_id }}</li>
+          <li>{{ obj.shop_name }}</li>
+          <li>{{ obj.shopHoliday_id }}</li>
+          <li>{{ obj.shop_tell }}</li>
+          <li>{{ obj.shop_fax }}</li>
+          <li>{{ obj.shop_address }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>ロットデータ</h2>
+      <ul>
+        {% for obj in lot_data %}
+          <li>{{ obj.shop_id }}</li>
+          <li>{{ obj.year }}</li>
+          <li>{{ obj.month }}</li>
+          <li>{{ obj.distribution_type_id }}</li>
+          <li>{{ obj.distributionDate }}</li>
+          <li>{{ obj.service }}</li>
+          <li>{{ obj.printNum }}</li>
+          <li>{{ obj.distributer }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>店分データ</h2>
+      <ul>
+        {% for obj in shopsample_data %}
+          <li>{{ obj.shopsample_id }}</li>
+          <li>{{ obj.shop_id }}</li>
+          <li>{{ obj.year }}</li>
+          <li>{{ obj.month }}</li>
+          <li>{{ obj.service_id }}</li>
+          <li>{{ obj.shopsample_number }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

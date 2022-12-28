@@ -1,0 +1,46 @@
+
+{% load md5url %}
+<html>
+<head>
+  <title>Aichipr Works</title>
+  <link rel="stylesheet" type="text/css" href="{% md5url 'css/style.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="{% md5url 'js/script.js' %}"></script>
+  
+</head>
+<body>
+  <div class="wrapper-detail">
+    <h1 class="title"><a href="">add Process</a></h1>
+    <div class="inner-detail">
+      <div class="do-not-print">
+        
+        <form id="add_process" method="POST">
+          {% csrf_token %}
+          <div class="search-category">
+            <p class="search-head">{{ form.orderNum.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.orderNum }} </p>
+          </div>
+          <div class="search-category">
+            <p class="search-head">{{ form.employee_id.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.employee_id }} </p>
+          </div>
+          <ul class="data-range select-button searchtable-row">
+            <li class="data-range-item"> {{ form.checkBox_update | safe }} {{ form.checkBox_update.label_tag }}</li>
+          </ul>
+          <ul class="button_wrapper">
+            <li><button id="add_process_btn" class="search-btn" type="submit">追加</button></li>
+          </ul>
+        </form>
+      </div>
+      <p id="process_log">{{ log }}</p>
+    </div>
+    <h2>アプリDBに追加されたデータ</h2>
+        <ul>
+          {% for obj in update_oderNM %}
+            <li>{{ obj }}</li>
+            <li>------------------------------------------------------------------------------</li>
+          {% endfor %}
+        </ul>
+  </div>
+</body>
+</html>

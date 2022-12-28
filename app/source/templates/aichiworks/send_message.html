@@ -1,0 +1,44 @@
+
+{% load md5url %}
+<html>
+<head>
+  <title>Aichipr Works</title>
+  <link rel="stylesheet" type="text/css" href="{% md5url 'css/style.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="{% md5url 'js/script.js' %}"></script>
+  
+</head>
+<body>
+  <div class="wrapper-detail">
+    <h1 class="title"><a href="">send Message</a></h1>
+    <div class="inner-detail">
+      <div class="do-not-print">
+        
+        <form id="send_message" method="POST">
+          {% csrf_token %}
+          <div class="search-category">
+            <p class="search-head">{{ form.orderNum.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.orderNum }} </p>
+          </div>
+          <div class="search-category">
+            <p class="search-head">{{ form.employee_id_from.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.employee_id_from }} </p>
+          </div>
+          <div class="search-category">
+            <p class="search-head">{{ form.employee_id_to.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.employee_id_to }} </p>
+          </div>
+          <div class="search-category">
+            <p class="search-head">{{ form.message.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.message }} </p>
+          </div>
+          <ul class="button_wrapper">
+            <li><button id="add_process_btn" class="search-btn" type="submit">送信</button></li>
+          </ul>
+        </form>
+      </div>
+      <p id="process_log">{{ log }}</p>
+    </div>
+  </div>
+</body>
+</html>

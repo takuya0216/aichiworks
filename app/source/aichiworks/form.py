@@ -19,6 +19,12 @@ class queryForm(forms.Form):
     required=False,
     initial=False
   )
+  checkBox_today = forms.BooleanField(
+    label='今日',
+    label_suffix='',
+    required=False,
+    initial=False
+  )
 
   orderNum = forms.CharField(
     label='計画書No',
@@ -193,6 +199,65 @@ class queryForm(forms.Form):
 
   checkBox_shinohara = forms.BooleanField(
     label='シノハラ',
+    label_suffix='',
+    required=False,
+    initial=False
+  )
+
+  employee_id = forms.IntegerField(
+    label='社員番号',
+    label_suffix='',
+    required = False,
+  )
+
+  time = forms.DateTimeField(
+    label='時間',
+    input_formats=['%Y-%m-%dT%H:%M'],
+    required = False,
+    widget=forms.DateTimeInput(attrs={"type": "datetime-local"}),
+  )
+
+  process_status_id = forms.IntegerField(
+    label='進行状況ID',
+    label_suffix='',
+    required = False,
+  )
+
+  employee_id_from = forms.IntegerField(
+    label='送信者（社員番号）',
+    label_suffix='',
+    required = False,
+  )
+
+  employee_id_to = forms.IntegerField(
+    label='受信者（社員番号）',
+    label_suffix='',
+    required = False,
+  )
+
+  message = forms.CharField(
+    label='メッセージ',
+    label_suffix='',
+    required = False,
+    widget=forms.Textarea(attrs={'placeholder':'メッセージ...'})
+  )
+
+  message_id = forms.CharField(
+    label='messageID',
+    label_suffix='',
+    required = True,
+    max_length=100,
+  )
+
+  checkBox_messabe_enabled = forms.BooleanField(
+    label='有効・無効切り替え',
+    label_suffix='',
+    required=False,
+    initial=False
+  )
+
+  checkBox_update = forms.BooleanField(
+    label='更新',
     label_suffix='',
     required=False,
     initial=False

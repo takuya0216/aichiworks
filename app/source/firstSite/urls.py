@@ -18,7 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('aichiworks.urls')),
     path('admin/', admin.site.urls),
-    path('aichiworks/', include('aichiworks.urls')),
+    path('aichiprworks/', include('aichiworks.urls')),
+    path('aichiprworks/<str:orderNum>', include('aichiworks.urls')),
+    path('aichiprworks/util/showDatabase', include('aichiworks.urls')),
+    path('aichiprworks/util/addProcess', include('aichiworks.urls')),
+    path('aichiprworks/util/deleteProcess', include('aichiworks.urls')),
+    path('aichiprworks/util/sendMessage', include('aichiworks.urls')),
+    path('aichiprworks/util/deleteMessage', include('aichiworks.urls')),
+    path('aichiprworks/util/editProcess/<str:processID>', include('aichiworks.urls')),
+    path('rbworks/', include('rbworks.urls')),
 ]

@@ -2,4 +2,5 @@
 database/data/*
 *txt
 .env
+*.csv
 app/source/firstSite/secrets.py

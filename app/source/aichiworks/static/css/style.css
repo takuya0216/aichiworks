@@ -249,11 +249,15 @@ ul.select-button label{
     /*margin: 3px;*/
  }
 
+button.samedate-btn {
+    margin: 0 10;
+}
+
 #searchtable{
     margin-bottom: 3em;
 }
 
-#searchtable button{
+.button_wrapper button{
     margin-top: 1em;
 }
 
@@ -309,6 +313,14 @@ p.detail-delevery-row {
 }
 p.detail-delevery-row span {
     flex-basis: 30%;
+}
+
+/*aichiworks.util*/
+form#delete_message {
+    height: fit-content;
+}
+form#add_process {
+    height: fit-content;
 }
 
 /*印刷しない*/

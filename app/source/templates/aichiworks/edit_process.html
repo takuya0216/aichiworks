@@ -1,0 +1,36 @@
+
+{% load md5url %}
+<html>
+<head>
+  <title>Aichipr Works</title>
+  <link rel="stylesheet" type="text/css" href="{% md5url 'css/style.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="{% md5url 'js/script.js' %}"></script>
+  
+</head>
+<body>
+  <div class="wrapper-detail">
+    <h1 class="title"><a href="">edit Process</a></h1>
+    <div class="inner-detail">
+      <div class="do-not-print">
+        <h2>プロセスID:{{ process_id }}</h2>
+        <form id="edit_process" method="POST">
+          {% csrf_token %}
+          <div class="search-category">
+            <p class="search-head">{{ form.employee_id.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.employee_id }} </p>
+          </div>
+          <div class="search-category">
+            <p class="search-head">{{ form.process_status_id.label_tag}}</p>
+            <p class="searchtable-row"> {{ form.process_status_id }} </p>
+          </div>
+          <ul class="button_wrapper">
+            <li><button id="edit_process_btn" class="search-btn" type="submit">変更</button></li>
+          </ul>
+        </form>
+      </div>
+      <p id="process_log">{{ log }}</p>
+    </div>
+  </div>
+</body>
+</html>

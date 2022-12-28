@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'aichiworks',
+    'rbworks',
     'django_static_md5url',
 ]
 

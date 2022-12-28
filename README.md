@@ -58,6 +58,34 @@ services:
 ALLOWED_HOSTS = ["192.168.1.12"]
 ```
 
+### accessDB management
+app/docker-compose.yml
+```python
+${PATHTOAICHIPRDB}:/django/aichiworks/data
+```
+app/.env
+```python
+PATHTOAICHIPRDB = accessDB Path here
+```
+
 ### Access
 
 [`192.168.1.12:8081`](http://192.168.1.12:8081)
+
+### API
+/aichiprworks<br>
+DB検索<br>
+/aichiprworks/<str:orderNm><br>
+詳細ページ表示<br>
+/aichiprworks/util/showDatabase<br>
+アプリDBの表示<br>
+/aichiprworks/util/addProcess<br>
+プロセスの追加<br>
+/aichiprworks/util/deleteProcess<br>
+プロセスの削除。同時に紐つくメッセージも削除。<br>
+/aichiprworks/util/editProcess/processID<br>
+プロセスのデータの変更。showDatabaseページよりアクセス可能。<br>
+/aichiprworks/util/sendMessage<br>
+プロセス毎のメッセージ送信<br>
+/aichiprworks/util/deleteMessage<br>
+プロセス毎のメッセージを削除<br>

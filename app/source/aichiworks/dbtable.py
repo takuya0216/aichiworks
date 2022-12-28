@@ -185,12 +185,18 @@ def get_printerlist_form_query(rinten :bool, kikuzen :bool, kikuhan :bool, pod :
     
     return printer_list
 
-def get_dataframe_from_accdb(dbPath, tableName):
+def get_dataframe_from_accdb(dbPath=ACCESSDBPATH, tableName=DBTABLENAME):
    return format_dataframe(mdb.read_table(dbPath, tableName))
+
+def get_dataframe_today(df):
+    today = datetime.datetime.now() - relativedelta(days=1)
+    df = df[df['IssueDt'] >= today]
+    return df
 
 def get_limited_timerange_dataframe(df, query):
     lastyear = get_lastyear_datetime()
     halfyear = get_halfyear_datetime()
+    today = datetime.datetime.now() - relativedelta(days=1)
 
     #01/00/00 00:00:00（1951/11/01 00:00:00）は含める
     defalt_date_df = get_defaultTime_df(df, 'IssueDt')
@@ -199,6 +205,8 @@ def get_limited_timerange_dataframe(df, query):
         df = df[df['IssueDt'] >= lastyear]
     elif query['checkBox_half_year']:
         df = df[df['IssueDt'] >= halfyear]
+    elif query['checkBox_today']:
+        df = df[df['IssueDt'] >= today]
     return pd.concat([df, defalt_date_df], axis=0)
 
 def query_daterange(key, start_datetime, end_datetime, dataframe):
@@ -231,9 +239,11 @@ def generate_dbtable(query):
 
 #前処理  
     df_top = df[TABLEHEADER]
-    df_top = get_limited_timerange_dataframe(df_top, query)
 
 #クエリー処理
+    #発行日
+    df_top = get_limited_timerange_dataframe(df_top, query)
+
     #計画書番号
     if query['orderNum'] != '':
         df_top = df_top[df_top['OrderNb'] == query['orderNum']]
@@ -320,7 +330,7 @@ def generate_dbtable(query):
     for td in tds:
         td_text = td.string
         td.string = ""
-        nt = soup.new_tag('a', href='/' + td_text, target='_blank',rel='noopener noreferrer')
+        nt = soup.new_tag('a', href='/aichiprworks/' + td_text, target='_blank',rel='noopener noreferrer')
         nt.string = td_text
         td.append(nt)
 

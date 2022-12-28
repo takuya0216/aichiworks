@@ -1,0 +1,153 @@
+
+{% load md5url %}
+<html>
+<head>
+  <title>Show database</title>
+  <link rel="stylesheet" type="text/css" href="{% md5url 'css/style.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="{% md5url 'js/script.js' %}"></script>
+</head>
+<body>
+  <div class="wrapper-detail">
+    
+    <h1 class="title"><a href="">Show Database</a></h1>
+    <div class="inner-detail">
+      <h2>プロセス</h2>
+        <ul>
+          {% for obj in process %}
+            <li>ID:{{ obj.process_id }}</li>
+            <li>計画書No:{{ obj.order_number }}</li>
+            <li>更新時間:{{ obj.process_time }}</li>
+            <li>担当社員番号:{{ obj.employee_id }}</li>
+            <li>進行状況ID:{{ obj.status_id }}</li>
+            <li>------------------------------------------------------------------------------</li>
+          {% endfor %}
+        </ul>
+      <h2>進行状況</h2>
+        <ul>
+          {% for obj in status %}
+            <li>ID:{{ obj.status_id }}</li>
+            <li>
+              状況:{{ obj.status_name }}
+              {% if obj.status_id == 1 %}
+                {% for obj2 in process_new %}
+                <ul>
+                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>更新時間:{{ obj2.process_time }}</li>
+                  <li>担当社員番号:{{ obj2.employee_id }}</li>
+                  <li>進行状況ID:{{ obj2.status_id }}</li>
+                  <li>------------------------------------------------------------------------------</li>
+                </ul>
+                {% endfor %}
+              
+              {% elif obj.status_id == 2 %}
+                {% for obj2 in process_edit %}
+                <ul>
+                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>更新時間:{{ obj2.process_time }}</li>
+                  <li>担当社員番号:{{ obj2.employee_id }}</li>
+                  <li>進行状況ID:{{ obj2.status_id }}</li>
+                  <li>------------------------------------------------------------------------------</li>
+                </ul>
+                {% endfor %}
+              
+              {% elif obj.status_id == 3 %}
+                {% for obj2 in process_submit_wait %}
+                <ul>
+                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>更新時間:{{ obj2.process_time }}</li>
+                  <li>担当社員番号:{{ obj2.employee_id }}</li>
+                  <li>進行状況ID:{{ obj2.status_id }}</li>
+                  <li>------------------------------------------------------------------------------</li>
+                </ul>
+                {% endfor %}
+
+              {% elif obj.status_id == 4 %}
+                {% for obj2 in process_prepress %}
+                <ul>
+                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>更新時間:{{ obj2.process_time }}</li>
+                  <li>担当社員番号:{{ obj2.employee_id }}</li>
+                  <li>進行状況ID:{{ obj2.status_id }}</li>
+                  <li>------------------------------------------------------------------------------</li>
+                </ul>
+                {% endfor %}
+
+              {% elif obj.status_id == 5 %}
+                {% for obj2 in process_pressed %}
+                <ul>
+                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>更新時間:{{ obj2.process_time }}</li>
+                  <li>担当社員番号:{{ obj2.employee_id }}</li>
+                  <li>進行状況ID:{{ obj2.status_id }}</li>
+                  <li>------------------------------------------------------------------------------</li>
+                </ul>
+                {% endfor %}
+
+              {% elif obj.status_id == 6 %}
+                {% for obj2 in process_complete %}
+                <ul>
+                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>更新時間:{{ obj2.process_time }}</li>
+                  <li>担当社員番号:{{ obj2.employee_id }}</li>
+                  <li>進行状況ID:{{ obj2.status_id }}</li>
+                  <li>------------------------------------------------------------------------------</li>
+                </ul>
+                {% endfor %}
+
+              {% endif %}
+            </li>
+            <li>------------------------------------------------------------------------------</li>
+          {% endfor %}
+        </ul> 
+      <h2>メッセージ</h2>
+        <ul>
+          {% for obj in message %}
+            <li>ID:{{ obj.message_id }}</li>
+            <li>プロセスID:{{ obj.process_id }}</li>
+            <li>時間:{{ obj.message_time }}</li>
+            <li>送り人:{{ obj.employee_id_from }}</li>
+            <li>受け取り人:{{ obj.employee_id_to }}</li>
+            <li>メッセージ:{{ obj.message_text }}</li>
+            <li>有効:{{ obj.message_enabled }}</li>
+            <li>------------------------------------------------------------------------------</li>
+          {% endfor %}
+        </ul>
+      <h2>社員</h2>
+      <ul>
+        {% for obj in employee %}
+          <li>ID:{{ obj.employee_id }}</li>
+          <li>部署ID:{{ obj.department_id }}</li>
+          <li>名前:{{ obj.employee_firstname }}</li>
+          <li>苗字:{{ obj.employee_lastname }}</li>
+          <li>役職ID:{{ obj.position_id }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>部署</h2>
+      <ul>
+        {% for obj in department %}
+          <li>ID:{{ obj.department_id }}</li>
+          <li>部署名:{{ obj.department_name }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      <h2>役職</h2>
+      <ul>
+        {% for obj in position %}
+          <li>ID:{{ obj.position_id }}</li>
+          <li>役職名:{{ obj.position_name }}</li>
+          <li>------------------------------------------------------------------------------</li>
+        {% endfor %}
+      </ul>
+      
+    </div>
+  </div>
+</body>
+</html>
