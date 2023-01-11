@@ -193,6 +193,11 @@ def get_dataframe_today(df):
     df = df[df['IssueDt'] >= today]
     return df
 
+def get_dataframe_lastweek(df):
+    today = datetime.datetime.now() - relativedelta(days=8)
+    df = df[df['IssueDt'] >= today]
+    return df
+
 def get_limited_timerange_dataframe(df, query):
     lastyear = get_lastyear_datetime()
     halfyear = get_halfyear_datetime()
@@ -207,6 +212,8 @@ def get_limited_timerange_dataframe(df, query):
         df = df[df['IssueDt'] >= halfyear]
     elif query['checkBox_today']:
         df = df[df['IssueDt'] >= today]
+    else:
+        return df
     return pd.concat([df, defalt_date_df], axis=0)
 
 def query_daterange(key, start_datetime, end_datetime, dataframe):
