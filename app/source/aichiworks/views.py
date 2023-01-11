@@ -2,6 +2,7 @@ import datetime
 
 from django.shortcuts import render
 from django.http import Http404
+from django.http import JsonResponse,HttpResponse
 
 import aichiworks.models as models
 from .form import queryForm
@@ -110,6 +111,47 @@ def detail(request, orderNum):
   
   return render(request, 'aichiworks/detail.html', params)
 
+def show_process(request):
+
+  models.update_process()
+
+  response = {}
+  response['process'] = models.Process.objects.all()
+  response['process_new'] = models.Process.objects.filter(status_id=1)
+  response['process_edit'] = models.Process.objects.filter(status_id=2)
+  response['process_submit_wait'] = models.Process.objects.filter(status_id=3)
+  response['process_prepress'] = models.Process.objects.filter(status_id=4)
+  response['process_pressed'] = models.Process.objects.filter(status_id=5)
+  response['process_complete'] = models.Process.objects.filter(status_id=6)
+  response['status'] = models.Status.objects.all()
+  response['message'] = models.Message.objects.all()
+
+  return render(request, 'aichiworks/process.html', response)
+
+def show_message(request):
+  if request.method == 'POST':
+    processID=request.POST.get('process_id')
+    if models.Message.objects.filter(process_id=processID).exists():
+      response = models.Message.objects.filter(process_id=processID)
+      
+      response_dic ={'message_json':[]}
+      for res in response:
+        res_dic = {
+          'message_id':res.message_id,
+          'process_id':res.process_id,
+          'message_time':res.message_time,
+          'employee_id_from':res.employee_id_from,
+          'employee_id_to':res.employee_id_to,
+          'message_text':res.message_text,
+          'message_enabled':res.message_enabled
+        }
+        response_dic['message_json'].append(res_dic)
+        
+
+      return JsonResponse(response_dic, safe=False)
+    else:
+      return HttpResponse(status=204)
+
 def show_database(request):
 
   models.init_database()
@@ -177,10 +219,13 @@ def delete_process_render(request):
   if request.method == 'GET':  
     return render(request, 'aichiworks/delete_process.html', params)
   if request.method == 'POST':
-    params['log'] = '削除された'
-    if(request.POST['orderNum'] != ''):
-      models.del_process(order_nm=request.POST['orderNum'])
-      params['log'] = request.POST['orderNum'] + 'が削除された'
+    if 'checkBox_all' in request.POST:
+      models.del_all_process()
+      params['log'] = '全て削除された'
+    else:
+      if(request.POST['orderNum'] != ''):
+        models.del_process(order_nm=request.POST['orderNum'])
+        params['log'] = request.POST['orderNum'] + 'が削除された'
 
     return render(request, 'aichiworks/delete_process.html', params)
 

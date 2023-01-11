@@ -63,6 +63,9 @@ h3.search-head{
 .section-mid-width p{
     width: 70%;
 }
+.show {
+    
+}
 
 /*TOP*/
 #loading-overlay {
@@ -323,6 +326,36 @@ form#add_process {
     height: fit-content;
 }
 
+/*process*/
+#message_pane {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    opacity: .7;
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    transform: translateX(100%);
+    transition: 0.38s ease-out;
+    background-color: #333;
+    z-index: -1;
+    color: #fff;
+}
+#message_pane.active{
+    display: flex;
+    opacity: 1;
+    transform: translateX(0%);
+    z-index: 2;
+}
+div#process_table {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 1em;
+}
 /*印刷しない*/
 @media print {
     .do-not-print {

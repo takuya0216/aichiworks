@@ -20,6 +20,9 @@
             <p class="search-head">{{ form.orderNum.label_tag}}</p>
             <p class="searchtable-row"> {{ form.orderNum }} </p>
           </div>
+          <ul class="data-range select-button searchtable-row">
+            <li class="data-range-item"> {{ form.checkBox_all | safe }} {{ form.checkBox_all.label_tag }}</li>
+          </ul>
           <ul class="button_wrapper">
             <li><button id="delete_process_btn" class="search-btn" type="submit">削除</button></li>
           </ul>

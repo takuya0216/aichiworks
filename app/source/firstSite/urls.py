@@ -21,6 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('aichiprworks/', include('aichiworks.urls')),
     path('aichiprworks/<str:orderNum>', include('aichiworks.urls')),
+    path('aichiprworks/process', include('aichiworks.urls')),
+    path('aichiprworks/process/message/', include('aichiworks.urls')),
     path('aichiprworks/util/showDatabase', include('aichiworks.urls')),
     path('aichiprworks/util/addProcess', include('aichiworks.urls')),
     path('aichiprworks/util/deleteProcess', include('aichiworks.urls')),

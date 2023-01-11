@@ -1,0 +1,179 @@
+
+{% load md5url %}
+<html>
+<head>
+  <title>Process</title>
+  <link rel="stylesheet" type="text/css" href="{% md5url 'css/style.css' %}" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="{% md5url 'js/script.js' %}"></script>
+  <script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    $(document).ready( function () {
+        $('.show_message_btn').on('click', function(e){
+            e.preventDefault();
+            $(this).toggleClass('active');
+            $('#message_pane').empty();
+
+            if ($(this).hasClass('active')) {
+                process_id = $(this).val()
+
+                $.ajax({
+                    url: "{% url 'aichiprworks:message_ajax' %}",
+                    type: 'POST',
+                    data: {'process_id':process_id},
+                    dataType: 'json'
+                }).done(function(response, TextStatus, jqXHR){
+                    if(jqXHR.status === 200){
+                        response_list = response['message_json']
+
+                        var title = $('<h3 id=message_title>メッセージ</h3>')
+                        $('#message_pane').append(title);
+
+                        response_list.forEach((dic, index) => {
+                            var paragraph = $('<p class="message_pane_pid">');
+                            paragraph.html(dic.message_text)
+                            $('#message_pane').append(paragraph);
+                        })
+                    }
+                    else if(jqXHR.status === 204){
+                        //no messages
+                        var title = $('<h3 id=message_title>メッセージはありません。</h3>')
+                        $('#message_pane').append(title);
+                    }
+                    
+                }).fail(function(jqXHR, textStatus, errorThrown){
+                    alert("エラーが発生しました。ステータス：" + jqXHR.status)
+                    $('#message_pane').removeClass('active');
+                    $('.show_message_btn').text("メッセージ")
+                });
+                $('#message_pane').addClass('active');
+                $(this).text("閉じる")
+            } else {
+                $('#message_pane').removeClass('active');
+                $('.show_message_btn').text("メッセージ")
+            }
+        });
+    });
+</script>
+</head>
+<body>
+    <div id="message_pane">
+        <p class="message_pane_pid"></p>
+    </div>
+  <div class="wrapper-detail">
+    <h1 class="title"><a href="">Process</a></h1>
+    <div class="inner-detail">
+        <div id="process_table">
+        {% for obj in status %}
+            <div class="process_block">
+                <h3>{{ obj.status_name }}</h3>
+                    {% if obj.status_id == 1 %}
+                    {% for obj2 in process_new %}
+                    <ul class="process_item">
+                        <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                        <li>計画書No:<a href="{% url 'aichiprworks:detail' obj2.order_number %}" target="_blank">{{ obj2.order_number }}</a></li>
+                        <li>更新時間:{{ obj2.process_time }}</li>
+                        <li>担当社員番号:{{ obj2.employee_id }}</li>
+                        <li><button class="show_message_btn ui-btn" type="button" value="{{ obj2.process_id }}">メッセージ</button></li>
+                        <li>------------------------------------------------------------------------------</li>
+                    </ul>
+                    {% endfor %}
+                
+                    {% elif obj.status_id == 2 %}
+                    {% for obj2 in process_edit %}
+                    <ul>
+                        <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                        <li>計画書No:<a href="{% url 'aichiprworks:detail' obj2.order_number %}" target="_blank">{{ obj2.order_number }}</a></li>
+                        <li>更新時間:{{ obj2.process_time }}</li>
+                        <li>担当社員番号:{{ obj2.employee_id }}</li>
+                        <li><button class="show_message_btn ui-btn" type="button" value="{{ obj2.process_id }}">メッセージ</button></li>
+                        <li>------------------------------------------------------------------------------</li>
+                    </ul>
+                    {% endfor %}
+                
+                    {% elif obj.status_id == 3 %}
+                    {% for obj2 in process_submit_wait %}
+                    <ul>
+                        <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                        <li>計画書No:<a href="{% url 'aichiprworks:detail' obj2.order_number %}" target="_blank">{{ obj2.order_number }}</a></li>
+                        <li>更新時間:{{ obj2.process_time }}</li>
+                        <li>担当社員番号:{{ obj2.employee_id }}</li>
+                        <li><button class="show_message_btn ui-btn" type="button" value="{{ obj2.process_id }}">メッセージ</button></li>
+                        <li>------------------------------------------------------------------------------</li>
+                    </ul>
+                    {% endfor %}
+
+                    {% elif obj.status_id == 4 %}
+                    {% for obj2 in process_prepress %}
+                    <ul>
+                        <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                        <li>計画書No:<a href="{% url 'aichiprworks:detail' obj2.order_number %}" target="_blank">{{ obj2.order_number }}</a></li>
+                        <li>更新時間:{{ obj2.process_time }}</li>
+                        <li>担当社員番号:{{ obj2.employee_id }}</li>
+                        <li><button class="show_message_btn ui-btn" type="button" value="{{ obj2.process_id }}">メッセージ</button></li>
+                        <li>------------------------------------------------------------------------------</li>
+                    </ul>
+                    {% endfor %}
+
+                    {% elif obj.status_id == 5 %}
+                    {% for obj2 in process_pressed %}
+                    <ul>
+                        <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                        <li>計画書No:<a href="{% url 'aichiprworks:detail' obj2.order_number %}" target="_blank">{{ obj2.order_number }}</a></li>
+                        <li>更新時間:{{ obj2.process_time }}</li>
+                        <li>担当社員番号:{{ obj2.employee_id }}</li>
+                        <li><button class="show_message_btn ui-btn" type="button" value="{{ obj2.process_id }}">メッセージ</button></li>
+                        <li>------------------------------------------------------------------------------</li>
+                    </ul>
+                    {% endfor %}
+
+                    {% elif obj.status_id == 6 %}
+                    {% for obj2 in process_complete %}
+                    <ul>
+                        <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                        <li>計画書No:<a href="{% url 'aichiprworks:detail' obj2.order_number %}" target="_blank">{{ obj2.order_number }}</a></li>
+                        <li>更新時間:{{ obj2.process_time }}</li>
+                        <li>担当社員番号:{{ obj2.employee_id }}</li>
+                        <li><button class="show_message_btn ui-btn" type="button" value="{{ obj2.process_id }}">メッセージ</button></li>
+                        <li><button class="delete_message_btn ui-btn" type="button" value="{{ obj2.process_id }}">削除</button></li>
+                        <li>------------------------------------------------------------------------------</li>
+                    </ul>
+                    {% endfor %}
+                    {% endif %}
+            </div>
+        {% endfor %}
+        </div> 
+    </div>
+  </div>
+</body>
+</html>
