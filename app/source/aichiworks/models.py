@@ -1,6 +1,6 @@
 import uuid
 import datetime
-from .dbtable import get_dataframe_from_accdb,get_dataframe_lastweek
+from .dbtable import get_dataframe_from_accdb,get_dataframe_nday
 
 from email.policy import default
 from django.db import models
@@ -60,7 +60,8 @@ def add_process(order_nm, emp_id=0):
 
 def update_process():
   df = get_dataframe_from_accdb()
-  df = get_dataframe_lastweek(df)
+  #何日前まで取ってくるべきか要検討
+  df = get_dataframe_nday(df, 1)
   process_orderNM_list = Process.objects.all().values_list('order_number', flat=True)
   df_update = df[~df['OrderNb'].isin(process_orderNM_list)]
 

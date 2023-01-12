@@ -188,13 +188,8 @@ def get_printerlist_form_query(rinten :bool, kikuzen :bool, kikuhan :bool, pod :
 def get_dataframe_from_accdb(dbPath=ACCESSDBPATH, tableName=DBTABLENAME):
    return format_dataframe(mdb.read_table(dbPath, tableName))
 
-def get_dataframe_today(df):
-    today = datetime.datetime.now() - relativedelta(days=1)
-    df = df[df['IssueDt'] >= today]
-    return df
-
-def get_dataframe_lastweek(df):
-    today = datetime.datetime.now() - relativedelta(days=8)
+def get_dataframe_nday(df, offset):
+    today = datetime.datetime.now() - relativedelta(days=offset)
     df = df[df['IssueDt'] >= today]
     return df
 

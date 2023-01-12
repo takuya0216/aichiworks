@@ -211,6 +211,15 @@ def edit_process_render(request, processID):
   
     return render(request, 'aichiworks/edit_process.html', params)
 
+def delete_process_ajax(request):
+  if request.method == 'POST':
+    processID=request.POST.get('process_id')
+    if models.Process.objects.filter(process_id=processID).exists():
+      models.Process.objects.filter(process_id=processID).delete()
+      return HttpResponse(status=200)
+    else:
+      return Http404("プロセスIDが見つかりません")
+  
 def delete_process_render(request):
   params = {}
   form = queryForm(request.POST)
@@ -268,3 +277,14 @@ def delete_message_render(request):
     params['log'] = message_id + 'が削除された'
 
     return render(request, 'aichiworks/delete_message.html', params)
+
+def change_status_ajax(request):
+  if request.method == 'POST':
+    processID = request.POST.get('process_id')
+    offset = request.POST.get('offset')
+    if models.Process.objects.filter(process_id=processID).exists():
+      status =  models.Process.objects.get(process_id=processID).status_id + int(offset)
+      models.edit_process_status_id(processID, status)
+      return JsonResponse(data={'result':status}, status=200)
+    else:
+      raise Http404("プロセスIDが見つかりません")

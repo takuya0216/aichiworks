@@ -23,6 +23,8 @@ urlpatterns = [
     path('aichiprworks/<str:orderNum>', include('aichiworks.urls')),
     path('aichiprworks/process', include('aichiworks.urls')),
     path('aichiprworks/process/message/', include('aichiworks.urls')),
+    path('aichiprworks/process/delete_process/', include('aichiworks.urls')),
+    path('aichiprworks/process/changeStatus/', include('aichiworks.urls')),
     path('aichiprworks/util/showDatabase', include('aichiworks.urls')),
     path('aichiprworks/util/addProcess', include('aichiworks.urls')),
     path('aichiprworks/util/deleteProcess', include('aichiworks.urls')),

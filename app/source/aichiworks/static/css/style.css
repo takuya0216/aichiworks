@@ -356,6 +356,10 @@ div#process_table {
     justify-content: space-between;
     column-gap: 1em;
 }
+ul.status_btn_wrapper {
+    display: flex;
+    justify-content: space-between;
+}
 /*印刷しない*/
 @media print {
     .do-not-print {
