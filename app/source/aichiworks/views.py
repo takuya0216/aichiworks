@@ -116,15 +116,12 @@ def show_process(request):
   models.update_process()
 
   response = {}
-  response['process'] = models.Process.objects.all()
   response['process_new'] = models.Process.objects.filter(status_id=1)
-  response['process_edit'] = models.Process.objects.filter(status_id=2)
-  response['process_submit_wait'] = models.Process.objects.filter(status_id=3)
-  response['process_prepress'] = models.Process.objects.filter(status_id=4)
-  response['process_pressed'] = models.Process.objects.filter(status_id=5)
-  response['process_complete'] = models.Process.objects.filter(status_id=6)
+  response['process_edit_wait'] = models.Process.objects.filter(status_id=2)
+  response['process_prepress'] = models.Process.objects.filter(status_id=3)
+  response['process_pressed'] = models.Process.objects.filter(status_id=4)
+  response['process_complete'] = models.Process.objects.filter(status_id=5)
   response['status'] = models.Status.objects.all()
-  response['message'] = models.Message.objects.all()
 
   return render(request, 'aichiworks/process.html', response)
 
@@ -161,11 +158,10 @@ def show_database(request):
   
   response['process'] = models.Process.objects.all()
   response['process_new'] = models.Process.objects.filter(status_id=1)
-  response['process_edit'] = models.Process.objects.filter(status_id=2)
-  response['process_submit_wait'] = models.Process.objects.filter(status_id=3)
-  response['process_prepress'] = models.Process.objects.filter(status_id=4)
-  response['process_pressed'] = models.Process.objects.filter(status_id=5)
-  response['process_complete'] = models.Process.objects.filter(status_id=6)
+  response['process_edit_wait'] = models.Process.objects.filter(status_id=2)
+  response['process_prepress'] = models.Process.objects.filter(status_id=3)
+  response['process_pressed'] = models.Process.objects.filter(status_id=4)
+  response['process_complete'] = models.Process.objects.filter(status_id=5)
   response['employee'] = models.Employee.objects.all()
   response['department'] = models.Department.objects.all()
   response['position'] = models.Position.objects.all()
@@ -214,11 +210,10 @@ def edit_process_render(request, processID):
 def delete_process_ajax(request):
   if request.method == 'POST':
     processID=request.POST.get('process_id')
-    if models.Process.objects.filter(process_id=processID).exists():
-      models.Process.objects.filter(process_id=processID).delete()
+    if models.del_process(process_ID=processID):
       return HttpResponse(status=200)
     else:
-      return Http404("プロセスIDが見つかりません")
+      return Http404("プロセスの削除に失敗しました")
   
 def delete_process_render(request):
   params = {}

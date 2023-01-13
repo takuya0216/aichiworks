@@ -17,6 +17,7 @@
           {% for obj in process %}
             <li>ID:{{ obj.process_id }}</li>
             <li>計画書No:{{ obj.order_number }}</li>
+            <li>品名:{{ obj.process_name }}</li>
             <li>更新時間:{{ obj.process_time }}</li>
             <li>担当社員番号:{{ obj.employee_id }}</li>
             <li>進行状況ID:{{ obj.status_id }}</li>
@@ -34,6 +35,7 @@
                 <ul>
                   <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
                   <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
                   <li>担当社員番号:{{ obj2.employee_id }}</li>
                   <li>進行状況ID:{{ obj2.status_id }}</li>
@@ -42,10 +44,11 @@
                 {% endfor %}
               
               {% elif obj.status_id == 2 %}
-                {% for obj2 in process_edit %}
+                {% for obj2 in process_edit_wait %}
                 <ul>
                   <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
                   <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
                   <li>担当社員番号:{{ obj2.employee_id }}</li>
                   <li>進行状況ID:{{ obj2.status_id }}</li>
@@ -54,10 +57,11 @@
                 {% endfor %}
               
               {% elif obj.status_id == 3 %}
-                {% for obj2 in process_submit_wait %}
+                {% for obj2 in process_prepress %}
                 <ul>
                   <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
                   <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
                   <li>担当社員番号:{{ obj2.employee_id }}</li>
                   <li>進行状況ID:{{ obj2.status_id }}</li>
@@ -66,10 +70,11 @@
                 {% endfor %}
 
               {% elif obj.status_id == 4 %}
-                {% for obj2 in process_prepress %}
+                {% for obj2 in process_pressed %}
                 <ul>
                   <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
                   <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
                   <li>担当社員番号:{{ obj2.employee_id }}</li>
                   <li>進行状況ID:{{ obj2.status_id }}</li>
@@ -78,29 +83,17 @@
                 {% endfor %}
 
               {% elif obj.status_id == 5 %}
-                {% for obj2 in process_pressed %}
-                <ul>
-                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
-                  <li>計画書No:{{ obj2.order_number }}</li>
-                  <li>更新時間:{{ obj2.process_time }}</li>
-                  <li>担当社員番号:{{ obj2.employee_id }}</li>
-                  <li>進行状況ID:{{ obj2.status_id }}</li>
-                  <li>------------------------------------------------------------------------------</li>
-                </ul>
-                {% endfor %}
-
-              {% elif obj.status_id == 6 %}
                 {% for obj2 in process_complete %}
                 <ul>
                   <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
                   <li>計画書No:{{ obj2.order_number }}</li>
+                  <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
                   <li>担当社員番号:{{ obj2.employee_id }}</li>
                   <li>進行状況ID:{{ obj2.status_id }}</li>
                   <li>------------------------------------------------------------------------------</li>
                 </ul>
                 {% endfor %}
-
               {% endif %}
             </li>
             <li>------------------------------------------------------------------------------</li>

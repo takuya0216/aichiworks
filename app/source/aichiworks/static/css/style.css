@@ -354,11 +354,17 @@ form#add_process {
 div#process_table {
     display: flex;
     justify-content: space-between;
-    column-gap: 1em;
+}
+.process_block {
+    flex-basis: 17%;
 }
 ul.status_btn_wrapper {
     display: flex;
     justify-content: space-between;
+}
+ul.process_item {
+    border-bottom: 1px solid #333;
+    padding-bottom: 2em;
 }
 /*印刷しない*/
 @media print {

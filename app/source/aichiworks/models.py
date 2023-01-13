@@ -12,6 +12,7 @@ class Process(models.Model):
     process_time = models.DateTimeField(default=datetime.datetime.now())
     employee_id = models.SmallIntegerField(null=True, blank=True)
     status_id = models.SmallIntegerField(default=1)
+    process_name = models.CharField(max_length=30,default='')
 
 class Employee(models.Model):
     employee_id = models.SmallIntegerField(primary_key=True)
@@ -51,29 +52,33 @@ def conv_orderNum_to_processID(orderNumber):
 
 #Process
 #If emp_id is empty. Then database value is recorded as None.
-def add_process(order_nm, emp_id=0):
+def add_process(order_nm, p_name, emp_id=0):
   if not Process.objects.filter(order_number=order_nm).exists():
     if emp_id == 0 or emp_id == '':
-      Process.objects.create(order_number=order_nm)
+      Process.objects.create(order_number=order_nm, process_name=p_name)
     else:
-      Process.objects.create(order_number=order_nm,employee_id=emp_id)
+      Process.objects.create(order_number=order_nm, process_name=p_name, employee_id=emp_id)
 
 def update_process():
   df = get_dataframe_from_accdb()
   #何日前まで取ってくるべきか要検討
   df = get_dataframe_nday(df, 1)
   process_orderNM_list = Process.objects.all().values_list('order_number', flat=True)
-  df_update = df[~df['OrderNb'].isin(process_orderNM_list)]
+  df_updates = df[~df['OrderNb'].isin(process_orderNM_list)]
 
-  for orderNM in df_update['OrderNb'].values:
-    add_process(orderNM)
+  if df_updates.empty:
+    return True
 
-  return df_update['OrderNb'].values
+  for orderName, processName in zip(df_updates['OrderNb'], df_updates['ArticleNm']):
+    add_process(order_nm=orderName, p_name=processName)
+
+  return df_updates['OrderNb'].values
 
 def edit_process_employee_id(process_ID, emp_id):
   process = Process.objects.get(process_id=process_ID)
   if Employee.objects.filter(employee_id=emp_id).exists():
     process.employee_id = emp_id
+    process.process_time = datetime.datetime.now()
     process.save()
     return True
   else:
@@ -83,16 +88,22 @@ def edit_process_status_id(process_ID, stus_id):
   process = Process.objects.get(process_id=process_ID)
   if Status.objects.filter(status_id = stus_id).exists():
     process.status_id = stus_id
+    process.process_time = datetime.datetime.now()
     process.save()
     return True
   else:
     return False
 
-def del_process(order_nm):
-  processID = conv_orderNum_to_processID(order_nm)
-
-  if processID:
-    Process.objects.filter(order_number=order_nm).delete()
+def del_process(order_nm='', process_ID=''):
+  if process_ID:
+    processID = process_ID
+  elif order_nm:
+    processID = conv_orderNum_to_processID(order_nm)
+  else:
+    return False
+  
+  if Process.objects.filter(process_id=processID).exists():
+    Process.objects.filter(process_id=processID).delete()
     #delete Message has ProcessID
     messages = Message.objects.filter(process_id=processID)
     for msg in messages:
@@ -113,11 +124,13 @@ def send_message(process_ID, message_from, message_to, message_text):
 def disable_message(message_ID):
     message = Message.objects.get(message_id=message_ID)
     message.message_enabled = False
+    message.message_time = datetime.datetime.now()
     message.save()
 
 def enable_message(message_ID):
     message = Message.objects.get(message_id=message_ID)
     message.message_enabled = True
+    message.message_time = datetime.datetime.now()
     message.save()
 
 def is_message_enabled(message_ID):
@@ -133,7 +146,7 @@ def tggle_message_enabled(message_id):
 def delete_message(message_ID):
     Message.objects.filter(message_id=message_ID).delete()
 
-#Initialize
+#Initialize. This code should be deleted when dev is end.
 def init_database():
   #create static database if it not exist
   #if not Process.objects.exists():
