@@ -12,7 +12,7 @@ class Process(models.Model):
     process_time = models.DateTimeField(default=datetime.datetime.now())
     employee_id = models.SmallIntegerField(null=True, blank=True)
     status_id = models.SmallIntegerField(default=1)
-    process_name = models.CharField(max_length=30,default='')
+    process_name = models.CharField(max_length=50,default='')
 
 class Employee(models.Model):
     employee_id = models.SmallIntegerField(primary_key=True)
@@ -65,9 +65,6 @@ def update_process():
   df = get_dataframe_nday(df, 1)
   process_orderNM_list = Process.objects.all().values_list('order_number', flat=True)
   df_updates = df[~df['OrderNb'].isin(process_orderNM_list)]
-
-  if df_updates.empty:
-    return True
 
   for orderName, processName in zip(df_updates['OrderNb'], df_updates['ArticleNm']):
     add_process(order_nm=orderName, p_name=processName)

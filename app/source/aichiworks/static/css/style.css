@@ -283,7 +283,7 @@ table.dataTable * {
     background: #ffe97b!important;;
 }
 
-.checkmark{
+.checkmark, .checksheet{
     cursor: pointer;
 }
 
@@ -295,6 +295,45 @@ table.dataTable * {
     display: flex;
     justify-content: space-between;
     margin-top: 0;
+}
+
+#side_pane {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    opacity: .7;
+    top: 0;
+    right: 0;
+    width: 50vw;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    transform: translateX(100%);
+    transition: 0.38s ease-out;
+    background-color: #333;
+    z-index: -1;
+    color: #fff;
+}
+#side_pane.active{
+    display: flex;
+    opacity: 1;
+    transform: translateX(0%);
+    z-index: 2;
+}
+
+#side_pane .close_btn{
+    position: absolute;
+    top: 0;
+    left: 0.5em;
+    width: 1.5em;
+    fill: #fff;
+    padding: 5px;
+    cursor: pointer;
+}
+
+#side_pane .close_btn:hover{
+    fill: #e60113;
 }
 
 /*detail*/

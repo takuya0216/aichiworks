@@ -312,28 +312,51 @@ def generate_dbtable(query):
     
 #後処理
     df_top = translate_head(df_top)
-    df_top.insert(0, '', '')
+    header_icon1 = 'icon1'
+    header_icon2 = 'icon2'
+    df_top.insert(0, header_icon1, '')
+    df_top.insert(1, header_icon2, '')
 
     soup = BeautifulSoup(df_top.to_html(table_id="table"), "html.parser")
     table = soup.find('tbody')
 
-    tds = table.select('tr > td:nth-of-type(1)')
-  
-    for td in tds:
+    #orderNum for link
+    orderNum_list = []
+    tds_4 = table.select('tr > td:nth-of-type(4)')
+    for td in tds_4:
+        td_text = td.string
+        orderNum_list.append(td_text)
+
+    #squre icon
+    tds_1 = table.select('tr > td:nth-of-type(1)')
+    for td in tds_1:
         td.string = ""
         td.attrs['class'] = 'checkmark'
-        #squre icon
         nt = soup.new_tag('svg', attrs={"xmlns": "http://www.w3.org/2000/svg", "viewBox":"0 0 448 512"})
         nt2 = soup.new_tag('path', attrs={"d": "M384 32C419.3 32 448 60.65 448 96V416C448 451.3 419.3 480 384 480H64C28.65 480 0 451.3 0 416V96C0 60.65 28.65 32 64 32H384zM384 80H64C55.16 80 48 87.16 48 96V416C48 424.8 55.16 432 64 432H384C392.8 432 400 424.8 400 416V96C400 87.16 392.8 80 384 80z"})
         nt.append(nt2)
         td.append(nt)
-   
-    tds = table.select('tr > td:nth-of-type(3)')
-    for td in tds:
-        td_text = td.string
+
+    #squre pen icon
+    tds_2 = table.select('tr > td:nth-of-type(2)')    
+    for index, td in enumerate(tds_2):
         td.string = ""
-        nt = soup.new_tag('a', href='/aichiprworks/' + td_text, target='_blank',rel='noopener noreferrer')
-        nt.string = td_text
+        td.attrs['class'] = 'checksheet'
+        nt = soup.new_tag('svg', attrs={"xmlns": "http://www.w3.org/2000/svg", "viewBox":"0 0 512 512"})
+        nt2 = soup.new_tag('path', attrs={"d": "M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.8 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z"})
+        nt.append(nt2)
         td.append(nt)
+
+    for index, td in enumerate(tds_4):
+        td.string = ""
+        nt = soup.new_tag('a', href='/aichiprworks/detail/' + orderNum_list[index], target='_blank',rel='noopener noreferrer')
+        nt.string = orderNum_list[index]
+        td.append(nt)
+
+    theader = soup.find('thead')
+    icon1 = theader.select('th')[1]
+    icon2 = theader.select('th')[2]
+    icon1.string = ''
+    icon2.string = ''
 
     return str(soup)

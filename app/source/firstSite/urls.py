@@ -20,7 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('aichiprworks/', include('aichiworks.urls')),
-    path('aichiprworks/<str:orderNum>', include('aichiworks.urls')),
+    path('aichiprworks/detail/<str:orderNum>', include('aichiworks.urls')),
     path('aichiprworks/process', include('aichiworks.urls')),
     path('aichiprworks/process/message/', include('aichiworks.urls')),
     path('aichiprworks/process/delete_process/', include('aichiworks.urls')),

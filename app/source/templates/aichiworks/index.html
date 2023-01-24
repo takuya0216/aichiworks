@@ -9,7 +9,6 @@
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
   <script>
       $(document).ready( function () {
-        
           $('#table').attr('style', 'width: 100%;');
           $('#table').addClass('cell-border');
           var table = $('#table').DataTable({
@@ -21,12 +20,12 @@
               columnDefs: [
               // 1列目を消す(visibleをfalseにすると消えます)
               { targets: 0, visible: false },
-              { targets: 4, width: "7%" },
-              { targets: 5, width: "12%" },
-              { targets: 6, width: "25%" },
-              { targets: [7,8,10,11,12], width: "5%" },
+              { targets: 5, width: "7%" },
+              { targets: 6, width: "12%" },
+              { targets: 7, width: "25%" },
+              { targets: [8,9,11,12,13], width: "5%" },
               ],
-              "order": [[ 2, "desc" ]] ,
+              "order": [[ 3, "desc" ]] ,
           });
           $(window).on('resize', function(){
             table.columns.adjust();
@@ -57,12 +56,41 @@
             $("input[type='text']").val("")
             $("input[type='date']").val("")
           });
-      })
+
+          $('.checksheet').on('click', function(e){
+            e.preventDefault();
+            $(this).toggleClass('active');
+            //$('#side_pane').empty();
+
+            if ($(this).hasClass('active')) {
+              //ボタンアクティブ時処理
+              $('#side_pane').addClass('active');
+            }
+            else{
+              //ボタン非アクティブ処理
+              $('#side_pane').removeClass('active');
+            }
+          });
+
+          $('.close_btn').on('click', function(e){
+            e.preventDefault();
+            $('#side_pane').removeClass('active');
+            $('.checksheet.active').removeClass('active');
+          });
+      });
   </script>
   <script src="{% md5url 'js/script.js' %}"></script>
   
 </head>
 <body>
+  <div id="side_pane">
+    <div class="close_btn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+    </div>
+    <div class="side_pane_content">
+
+    </div>
+  </div>
   <div id="loading-overlay">
     <div class="sk-chase">
       <div class="sk-chase-dot"></div>
