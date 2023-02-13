@@ -8,87 +8,247 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
   <script>
-      $(document).ready( function () {
-          $('#table').attr('style', 'width: 100%;');
-          $('#table').addClass('cell-border');
-          var table = $('#table').DataTable({
-            "language": {
-              "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Japanese.json"
-            },
-              displayLength: 25,
-              autowidth: false,
-              columnDefs: [
-              // 1列目を消す(visibleをfalseにすると消えます)
-              { targets: 0, visible: false },
-              { targets: 5, width: "7%" },
-              { targets: 6, width: "12%" },
-              { targets: 7, width: "25%" },
-              { targets: [8,9,11,12,13], width: "5%" },
-              ],
-              "order": [[ 3, "desc" ]] ,
-          });
-          $(window).on('resize', function(){
-            table.columns.adjust();
-          });
-
-          $(window).on('load',function(){
-            $('#loading-overlay').addClass('loaded')
-            $('#loading-overlay').removeClass('unloaded')
-          });
-
-          $("#samedata_btn_plate").on('click', function(){
-            $("input[id='id_printDt_start']").val($("input[id='id_plateDt_start']").val())
-            $("input[id='id_printDt_end']").val($("input[id='id_plateDt_end']").val())
-          });
-
-          $("#samedata_btn_print").on('click', function(){
-            $("input[id='id_plateDt_start']").val($("input[id='id_printDt_start']").val())
-            $("input[id='id_plateDt_end']").val($("input[id='id_printDt_end']").val())
-          });
-
-          $('#search_btn').on('click', function(){
-            $('#loading-overlay').addClass('unloaded')
-            $('#loading-overlay').removeClass('loaded')
-          });
-
-          $("#clear_btn").on('click', function(){
-            $("input[type='checkbox']").prop('checked', false)
-            $("input[type='text']").val("")
-            $("input[type='date']").val("")
-          });
-
-          $('.checksheet').on('click', function(e){
-            e.preventDefault();
-            $(this).toggleClass('active');
-            //$('#side_pane').empty();
-
-            if ($(this).hasClass('active')) {
-              //ボタンアクティブ時処理
-              $('#side_pane').addClass('active');
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
-            else{
-              //ボタン非アクティブ処理
-              $('#side_pane').removeClass('active');
-            }
-          });
+        }
+        return cookieValue;
+    }
 
-          $('.close_btn').on('click', function(e){
-            e.preventDefault();
-            $('#side_pane').removeClass('active');
-            $('.checksheet.active').removeClass('active');
-          });
+    var csrftoken = getCookie('csrftoken');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
+    window.onload = function() {
+      const message = document.getElementById('id_message_input');
+
+      message.addEventListener('input', function() {
+        message.style.height = 'auto';
+        message.style.height = (this.scrollHeight) + 'px';
       });
+    }
+    
+    $(document).ready( function () {
+      $('#table').attr('style', 'width: 100%;');
+      $('#table').addClass('cell-border');
+      var table = $('#table').DataTable({
+        "language": {
+          "url": "https://cdn.datatables.net/plug-ins/1.10.16/i18n/Japanese.json"
+        },
+          displayLength: 25,
+          autowidth: false,
+          columnDefs: [
+          // 1列目を消す(visibleをfalseにすると消えます)
+          { targets: 0, visible: false },
+          { targets: 6, width: "7%" },
+          { targets: 7, width: "12%" },
+          { targets: 8, width: "25%" },
+          { targets: [9,10,12,13,14], width: "5%" },
+          ],
+          "order": [[ 4, "desc" ]] ,
+      });
+      $(window).on('resize', function(){
+        table.columns.adjust();
+      });
+
+      $(window).on('load',function(){
+        $('#loading-overlay').addClass('loaded')
+        $('#loading-overlay').removeClass('unloaded')
+      });
+
+      $("#samedata_btn_plate").on('click', function(){
+        $("input[id='id_printDt_start']").val($("input[id='id_plateDt_start']").val())
+        $("input[id='id_printDt_end']").val($("input[id='id_plateDt_end']").val())
+      });
+
+      $("#samedata_btn_print").on('click', function(){
+        $("input[id='id_plateDt_start']").val($("input[id='id_printDt_start']").val())
+        $("input[id='id_plateDt_end']").val($("input[id='id_printDt_end']").val())
+      });
+
+      $('#search_btn').on('click', function(){
+        $('#loading-overlay').addClass('unloaded')
+        $('#loading-overlay').removeClass('loaded')
+      });
+
+      $("#clear_btn").on('click', function(){
+        $("input[type='checkbox']").prop('checked', false)
+        $("input[type='text']").val("")
+        $("input[type='date']").val("")
+      });
+
+      $('.close_btn').on('click', function(e){
+        e.preventDefault();
+        $('#side_pane').removeClass('active');
+        $('.checksheet.active').removeClass('active');
+      });
+
+      // Show the modal overlay when the button is clicked
+      $(".checksheet").click(function() {
+        $("#modal-overlay-checksheet").show();
+        $("#chksheet_title").text("H########-得意先名-品名");
+      });
+
+      // Hide the modal overlay when either button is clicked
+      $("#cancel-button-checksheet, #send-button-checksheet, #modal_chksheet_close").click(function() {
+        $("#modal-overlay-checksheet").hide();
+      });
+
+      // Hide the modal overlay when either button is clicked
+      $("#cancel-button-message, #modal_message_close").click(function() {
+        $("#modal-overlay-message").hide();
+        $('.message').toggleClass('active');
+      });
+
+      /*message*/
+      $('.message').on('click', function(e){
+        e.preventDefault();
+        $(this).toggleClass('active');
+        order_num = $(this).attr('value')
+        $('#message_timeline').empty();
+        $("#message_title").text(order_num + 'のメッセージ');
+        $("#send-button-message").attr('value', order_num)
+
+        if ($(this).hasClass('active')) {
+            $.ajax({
+                url: "{% url 'aichiprworks:message_ajax' %}",
+                type: 'POST',
+                data: {'order_num':order_num},
+                dataType: 'json'
+            }).done(function(response, TextStatus, jqXHR){
+                if(jqXHR.status === 200){
+                    response_list = response['message_json']
+                    response_list.forEach((dic, index) => {
+                      let name = $('<li class="message_name">');
+                      name.html(dic.employee_id_from);
+                      let time = $('<li class="message_time">');
+                      time.html(dic.message_time);
+                      let paragraph1 = $('<ul class="message_paragraph-1">');
+                      paragraph1.append(name ,time)
+                      let paragraph2 = $('<div class="message_paragraph-2">');
+                      paragraph2.html(dic.message_text)
+                      $('#message_timeline').append(paragraph1, paragraph2);
+                    })
+                    
+                }
+                else if(jqXHR.status === 204){
+                    //no messages
+                } 
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                alert("エラーが発生しました。ステータス：" + jqXHR.status)
+            });
+            $("#modal-overlay-message").show();
+        } else {
+            
+        }
+      });
+
+      //send message
+      $('#send-button-message').on('click', function(e){
+        e.preventDefault();
+        order_num = $(this).attr('value')
+        //message value here 
+        message = $("#id_message_input").val();
+
+        $.ajax({
+            url: "{% url 'aichiprworks:message_send_ajax' %}",
+            type: 'POST',
+            data: {'order_num':order_num,
+                   'message':message},
+            dataType: 'json'
+        }).done(function(response, TextStatus, jqXHR){
+          if(jqXHR.status === 200){
+            res_message = response['message_json']
+            let name = $('<li class="message_name">');
+            name.html(res_message.employee_id_from);
+            let time = $('<li class="message_time">');
+            time.html(res_message.message_time);
+            let paragraph1 = $('<ul class="message_paragraph-1">');
+            paragraph1.append(name ,time)
+            let paragraph2 = $('<div class="message_paragraph-2">');
+            paragraph2.html(res_message.message_text)
+            $('#message_timeline').append(paragraph1, paragraph2);
+            $('#id_message_input').val('');
+          }
+          else if(jqXHR.status === 204){
+              //no messages
+              alert('メッセージを入力してください。')
+          }
+        }).fail(function(jqXHR, textStatus, errorThrown){
+            alert("エラーが発生しました。ステータス：" + jqXHR.status)
+        });
+        $("#modal-overlay-message").show();
+    });
+  });
   </script>
   <script src="{% md5url 'js/script.js' %}"></script>
-  
 </head>
 <body>
   <div id="side_pane">
     <div class="close_btn">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
     </div>
-    <div class="side_pane_content">
-
+    <div class="side_pane_content"> 
+    </div>
+  </div>
+  <!-- Modal Overlay for checksheet-->
+  <div class="overlay" id="modal-overlay-checksheet">
+    <!-- Modal Window -->
+    <div class="modal">
+      <svg id="modal_chksheet_close" class="modal_close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+      <h3 id="chksheet_title"></h3>
+      <h4>出力チェックシート</h4>
+      <form id="chksheet_form" method="POST">
+        <ul>
+          <li>{{ form.checksheet_output_1 | safe }} {{ form.checksheet_output_1.label_tag }}</li>
+          <li>{{ form.checksheet_output_2 | safe }} {{ form.checksheet_output_2.label_tag }}</li>
+          <li>{{ form.checksheet_output_3 | safe }} {{ form.checksheet_output_3.label_tag }}</li>
+          <li>{{ form.checksheet_output_4 | safe }} {{ form.checksheet_output_4.label_tag }}</li>
+          <li>{{ form.checksheet_output_5 | safe }} {{ form.checksheet_output_5.label_tag }}</li>
+          <li>{{ form.checksheet_output_6 | safe }} {{ form.checksheet_output_6.label_tag }}</li>
+          <li>{{ form.checksheet_output_7 | safe }} {{ form.checksheet_output_7.label_tag }}</li>
+        </ul>
+        <button id="cancel-button-checksheet" type="button">Cancel</button>
+        <button id="send-button-checksheet" type="button">Send</button>
+      </form>
+      <h4>検版チェックシート</h4>
+      <form id="chksheet_form" method="POST">
+      </form>
+    </div>
+  </div>
+  <!-- Modal Overlay for message-->
+  <div class="overlay" id="modal-overlay-message">
+    <!-- Modal Window -->
+    <div class="modal">
+      <svg id="modal_message_close" class="modal_close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z"/></svg>
+      <h3 id="message_title"></h3>
+      <div id="message_timeline">
+      </div>
+      <form id="message_form" method="POST">
+        {{ form.message_input }}
+        <button id="cancel-button-message" type="button">キャンセル</button>
+        <button id="send-button-message" type="button">送信</button>
+      </form>
     </div>
   </div>
   <div id="loading-overlay">
@@ -103,7 +263,7 @@
   </div>
   <div class="wrapper-detail">
     
-    <h1 class="title"><a href="">Aichipr Works</a><span>ver1.0</span></h1>
+    <h1 class="title"><a href="">Aichipr Works</a><span>ver2.0</span></h1>
     <div class="inner-detail">
       <div class="do-not-print">
         
@@ -113,8 +273,8 @@
             <div class="search-head"><p>検索期間<br>（発行日）</p></div>
             <ul class="data-range select-button searchtable-row">
               <li class="data-range-item"> {{ form.checkBox_all | safe }} {{ form.checkBox_all.label_tag }}</li>
-              <li class="data-range-item"> {{ form.checkBox_half_year | safe }} {{ form.checkBox_half_year.label_tag }}</li>
               <li class="data-range-item"> {{ form.checkBox_year | safe }} {{ form.checkBox_year.label_tag }}</li>
+              <li class="data-range-item"> {{ form.checkBox_half_year | safe }} {{ form.checkBox_half_year.label_tag }}</li>
               <li class="data-range-item"> {{ form.checkBox_today | safe }} {{ form.checkBox_today.label_tag }}</li>
             </ul>
           </div>
@@ -159,12 +319,12 @@
               <li>{{ form.checkBox_kikuhan | safe }} {{ form.checkBox_kikuhan.label_tag }}</li>
               <li>{{ form.checkBox_pod | safe }} {{ form.checkBox_pod.label_tag }}</li>
               <li>{{ form.checkBox_inkjet | safe }} {{ form.checkBox_inkjet.label_tag }}</li>
-              <li>{{ form.checkBox_print_multi | safe }} {{ form.checkBox_print_multi.label_tag }}</li>
-              <li>{{ form.checkBox_print_outsource | safe }} {{ form.checkBox_print_outsource.label_tag }}</li>
-              <li>{{ form.checkBox_noprint | safe }} {{ form.checkBox_noprint.label_tag }}</li>
               <li>{{ form.checkBox_futou | safe }} {{ form.checkBox_futou.label_tag }}</li>
               <li>{{ form.checkBox_print_meishi | safe }} {{ form.checkBox_print_meishi.label_tag }}</li>
               <li>{{ form.checkBox_shinohara | safe }} {{ form.checkBox_shinohara.label_tag }}</li>
+              <li>{{ form.checkBox_print_multi | safe }} {{ form.checkBox_print_multi.label_tag }}</li>
+              <li>{{ form.checkBox_print_outsource | safe }} {{ form.checkBox_print_outsource.label_tag }}</li>
+              <li>{{ form.checkBox_noprint | safe }} {{ form.checkBox_noprint.label_tag }}</li>
               <li>{{ form.checkBox_print_others | safe }} {{ form.checkBox_print_others.label_tag }}</li>
             </ul>
           </div>

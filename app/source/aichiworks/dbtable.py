@@ -314,18 +314,14 @@ def generate_dbtable(query):
     df_top = translate_head(df_top)
     header_icon1 = 'icon1'
     header_icon2 = 'icon2'
+    header_icon3 = 'icon3'
     df_top.insert(0, header_icon1, '')
     df_top.insert(1, header_icon2, '')
+    df_top.insert(2, header_icon3, '')
 
     soup = BeautifulSoup(df_top.to_html(table_id="table"), "html.parser")
     table = soup.find('tbody')
-
-    #orderNum for link
-    orderNum_list = []
-    tds_4 = table.select('tr > td:nth-of-type(4)')
-    for td in tds_4:
-        td_text = td.string
-        orderNum_list.append(td_text)
+    
 
     #squre icon
     tds_1 = table.select('tr > td:nth-of-type(1)')
@@ -347,6 +343,24 @@ def generate_dbtable(query):
         nt.append(nt2)
         td.append(nt)
 
+    #message icon
+    #orderNum for link
+    orderNum_list = []
+    tds_4 = table.select('tr > td:nth-of-type(5)')
+    for td in tds_4:
+        td_text = td.string
+        orderNum_list.append(td_text)
+
+    tds_3 = table.select('tr > td:nth-of-type(3)')
+    for index,td in enumerate(tds_3):
+        td.string = ""
+        td.attrs['class'] = 'message'
+        td.attrs['value'] = orderNum_list[index]
+        nt = soup.new_tag('svg', attrs={"xmlns": "http://www.w3.org/2000/svg", "viewBox":"0 0 512 512"})
+        nt2 = soup.new_tag('path', attrs={"d": "M64 112c-8.8 0-16 7.2-16 16v22.1L220.5 291.7c20.7 17 50.4 17 71.1 0L464 150.1V128c0-8.8-7.2-16-16-16H64zM48 212.2V384c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.7 31.5-132 0L48 212.2zM0 128C0 92.7 28.7 64 64 64H448c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128z"})
+        nt.append(nt2)
+        td.append(nt)
+
     for index, td in enumerate(tds_4):
         td.string = ""
         nt = soup.new_tag('a', href='/aichiprworks/detail/' + orderNum_list[index], target='_blank',rel='noopener noreferrer')
@@ -356,7 +370,9 @@ def generate_dbtable(query):
     theader = soup.find('thead')
     icon1 = theader.select('th')[1]
     icon2 = theader.select('th')[2]
+    icon3 = theader.select('th')[3]
     icon1.string = ''
     icon2.string = ''
+    icon3.string = ''
 
     return str(soup)

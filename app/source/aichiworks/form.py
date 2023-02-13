@@ -11,13 +11,13 @@ class queryForm(forms.Form):
     label='1年',
     label_suffix='',
     required=False,
-    initial=True
+    initial=False
   )
   checkBox_half_year = forms.BooleanField(
     label='半年',
     label_suffix='',
     required=False,
-    initial=False
+    initial=True
   )
   checkBox_today = forms.BooleanField(
     label='今日',
@@ -261,4 +261,60 @@ class queryForm(forms.Form):
     label_suffix='',
     required=False,
     initial=False
+  )
+
+  checksheet_output_1 = forms.BooleanField(
+    label='印刷用PDFである事を確認した',
+    label_suffix='',
+    required=True,
+    initial=False
+  )
+
+  checksheet_output_2 = forms.BooleanField(
+    label='フォントが埋め込みまたは、アウトライン化されている',
+    label_suffix='',
+    required=True,
+    initial=False
+  )
+
+  checksheet_output_3 = forms.BooleanField(
+    label='カラーは適正である（版数・特色・リッチブラック・カラースペース）',
+    label_suffix='',
+    required=True,
+    initial=False
+  )
+
+  checksheet_output_4 = forms.BooleanField(
+    label='出力サイズ（仕上がり）は適正である',
+    label_suffix='',
+    required=True,
+    initial=False
+  )
+
+  checksheet_output_5 = forms.BooleanField(
+    label='化粧断・塗り足しの有無と適正を確認した',
+    label_suffix='',
+    required=True,
+    initial=False
+  )
+
+  checksheet_output_6 = forms.BooleanField(
+    label='面付けの有無と適正を確認した',
+    label_suffix='',
+    required=True,
+    initial=False
+  )
+
+  checksheet_output_7 = forms.BooleanField(
+    label='ファイル名は適正である',
+    label_suffix='',
+    required=True,
+    initial=False
+  )
+
+  message_input = forms.CharField(
+    label='',
+    label_suffix='',
+    required = True,
+    widget=forms.Textarea(attrs={'rows':'1','name':'message_input'})
   )

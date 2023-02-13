@@ -125,30 +125,6 @@ def show_process(request):
 
   return render(request, 'aichiworks/process.html', response)
 
-def show_message(request):
-  if request.method == 'POST':
-    processID=request.POST.get('process_id')
-    if models.Message.objects.filter(process_id=processID).exists():
-      response = models.Message.objects.filter(process_id=processID)
-      
-      response_dic ={'message_json':[]}
-      for res in response:
-        res_dic = {
-          'message_id':res.message_id,
-          'process_id':res.process_id,
-          'message_time':res.message_time,
-          'employee_id_from':res.employee_id_from,
-          'employee_id_to':res.employee_id_to,
-          'message_text':res.message_text,
-          'message_enabled':res.message_enabled
-        }
-        response_dic['message_json'].append(res_dic)
-        
-
-      return JsonResponse(response_dic, safe=False)
-    else:
-      return HttpResponse(status=204)
-
 def show_database(request):
 
   models.init_database()
@@ -233,6 +209,27 @@ def delete_process_render(request):
 
     return render(request, 'aichiworks/delete_process.html', params)
 
+def show_message(request):
+  if request.method == 'POST':
+    order_num=request.POST.get('order_num')
+    if models.Message.objects.filter(order_number=order_num).exists():
+      response = models.Message.objects.filter(order_number=order_num)
+      response_dic ={'message_json':[]}
+      for res in response:
+        res_dic = {
+          'message_id':res.message_id,
+          'order_num':res.order_number,
+          'message_time':res.message_time,
+          'employee_id_from':res.employee_id_from,
+          'employee_id_to':res.employee_id_to,
+          'message_text':res.message_text,
+          'message_enabled':res.message_enabled
+        }
+        response_dic['message_json'].append(res_dic)
+      return JsonResponse(response_dic, safe=False)
+    else:
+      return HttpResponse(status=204)
+
 def send_message_render(request):
   params = {}
   form = queryForm(request.POST)
@@ -242,17 +239,35 @@ def send_message_render(request):
     return render(request, 'aichiworks/send_message.html', params)
   if request.method == 'POST':
     params['log'] = '送信された'
-    if(request.POST['orderNum'] != ''):
-      process_id = models.conv_orderNum_to_processID(request.POST['orderNum'])
-      if process_id == False:
-        raise Http404("プロセスIDが見つかりません")
-        
-      models.send_message(process_ID=process_id, message_from=request.POST['employee_id_from'],
-                 message_to=request.POST['employee_id_to'], message_text=request.POST['message'])
-      params['log'] = process_id
+    if(request.POST['orderNum'] != ''):    
+      models.send_message(order_num=request.POST['orderNum'], message_from=request.POST['employee_id_from'],
+                message_text=request.POST['message'])
+      params['log'] = request.POST['orderNum']
 
     return render(request, 'aichiworks/send_message.html', params)
 
+def send_message_ajax(request):
+  if request.method == 'POST':
+    order_number=request.POST.get('order_num')
+    message = request.POST.get('message')
+    
+    if message == '':
+      return HttpResponse(status=204)
+
+    response = models.send_message(order_num=order_number, message_text=message)
+    res_dic = {
+      'message_json': {
+        'message_id':response.message_id,
+        'order_num':response.order_number,
+        'message_time':response.message_time,
+        'employee_id_from':response.employee_id_from,
+        'employee_id_to':response.employee_id_to,
+        'message_text':response.message_text,
+        'message_enabled':response.message_enabled
+      }
+    }
+    return JsonResponse(res_dic, safe=False)
+    
 def delete_message_render(request):
   params = {}
   form = queryForm(request.POST)

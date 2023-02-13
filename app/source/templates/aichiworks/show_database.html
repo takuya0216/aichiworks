@@ -32,7 +32,7 @@
               {% if obj.status_id == 1 %}
                 {% for obj2 in process_new %}
                 <ul>
-                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>ID:{{ obj2.process_id }}</li>
                   <li>計画書No:{{ obj2.order_number }}</li>
                   <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
@@ -45,7 +45,7 @@
               {% elif obj.status_id == 2 %}
                 {% for obj2 in process_edit_wait %}
                 <ul>
-                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>ID:{{ obj2.process_id }}</li>
                   <li>計画書No:{{ obj2.order_number }}</li>
                   <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
@@ -58,7 +58,7 @@
               {% elif obj.status_id == 3 %}
                 {% for obj2 in process_prepress %}
                 <ul>
-                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>ID:{{ obj2.process_id }}</li>
                   <li>計画書No:{{ obj2.order_number }}</li>
                   <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
@@ -71,7 +71,7 @@
               {% elif obj.status_id == 4 %}
                 {% for obj2 in process_pressed %}
                 <ul>
-                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>ID:{{ obj2.process_id }}</li>
                   <li>計画書No:{{ obj2.order_number }}</li>
                   <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
@@ -84,7 +84,7 @@
               {% elif obj.status_id == 5 %}
                 {% for obj2 in process_complete %}
                 <ul>
-                  <li><a href="{% url 'aichiprworks:editProcess' obj2.process_id %}" target="_blank">ID:{{ obj2.process_id }}</a></li>
+                  <li>ID:{{ obj2.process_id }}</li>
                   <li>計画書No:{{ obj2.order_number }}</li>
                   <li>品名:{{ obj2.process_name }}</li>
                   <li>更新時間:{{ obj2.process_time }}</li>
@@ -102,7 +102,6 @@
         <ul>
           {% for obj in message %}
             <li>ID:{{ obj.message_id }}</li>
-            <li>プロセスID:{{ obj.process_id }}</li>
             <li>時間:{{ obj.message_time }}</li>
             <li>送り人:{{ obj.employee_id_from }}</li>
             <li>受け取り人:{{ obj.employee_id_to }}</li>

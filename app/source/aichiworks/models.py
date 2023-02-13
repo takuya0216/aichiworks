@@ -35,12 +35,12 @@ class Status(models.Model):
 
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    process_id = models.UUIDField()
     message_time = models.DateTimeField(default=datetime.datetime.now())
-    employee_id_from = models.SmallIntegerField()
-    employee_id_to = models.SmallIntegerField()
+    employee_id_from = models.SmallIntegerField(default=9999)
+    employee_id_to = models.SmallIntegerField(default=9999)
     message_text = models.TextField()
     message_enabled = models.BooleanField(default=True)
+    order_number = models.CharField(max_length=15, default=None)
 
 #utils
 def conv_orderNum_to_processID(orderNumber):
@@ -114,9 +114,9 @@ def del_all_process():
   Process.objects.all().delete()
 
 #Message
-def send_message(process_ID, message_from, message_to, message_text):
-    Message.objects.create(process_id=process_ID, employee_id_from=message_from,
-                            employee_id_to=message_to, message_text=message_text)
+def send_message(order_num, message_text, message_from=9999):
+    return Message.objects.create(order_number=order_num, employee_id_from=message_from,
+                            message_text=message_text, message_time=datetime.datetime.now())
 
 def disable_message(message_ID):
     message = Message.objects.get(message_id=message_ID)
