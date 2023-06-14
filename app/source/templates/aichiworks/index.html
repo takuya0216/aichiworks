@@ -104,6 +104,7 @@
       });
 
       // Show the modal overlay when the button is clicked
+      /*
       $(".checksheet").click(function() {
         $("#modal-overlay-checksheet").show();
         $("#chksheet_title").text("H########-得意先名-品名");
@@ -119,14 +120,16 @@
         $("#modal-overlay-message").hide();
         $('.message').toggleClass('active');
       });
+      */
 
       /*message*/
+      /*
       $('.message').on('click', function(e){
         e.preventDefault();
         $(this).toggleClass('active');
         order_num = $(this).attr('value')
         $('#message_timeline').empty();
-        $("#message_title").text(order_num + 'のメッセージ');
+        $("#message_title").text(order_num + 'のコメント');
         $("#send-button-message").attr('value', order_num)
 
         if ($(this).hasClass('active')) {
@@ -199,6 +202,7 @@
         });
         $("#modal-overlay-message").show();
     });
+    */
   });
   </script>
   <script src="{% md5url 'js/script.js' %}"></script>
@@ -275,6 +279,8 @@
               <li class="data-range-item"> {{ form.checkBox_all | safe }} {{ form.checkBox_all.label_tag }}</li>
               <li class="data-range-item"> {{ form.checkBox_year | safe }} {{ form.checkBox_year.label_tag }}</li>
               <li class="data-range-item"> {{ form.checkBox_half_year | safe }} {{ form.checkBox_half_year.label_tag }}</li>
+              <li class="data-range-item"> {{ form.checkBox_three_month | safe }} {{ form.checkBox_three_month.label_tag }}</li>
+              <li class="data-range-item"> {{ form.checkBox_one_month | safe }} {{ form.checkBox_one_month.label_tag }}</li>
               <li class="data-range-item"> {{ form.checkBox_today | safe }} {{ form.checkBox_today.label_tag }}</li>
             </ul>
           </div>

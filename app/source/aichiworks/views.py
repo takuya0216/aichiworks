@@ -14,7 +14,8 @@ def index(request):
     'printDt_start':'', 'printDt_end':'', 'orderNum':'',
     'checkBox_gaibu':'', 'checkBox_system':'', 'checkBox_design':'', 'checkBox_redbaron':'', 
     'checkBox_aeon':'', 'checkBox_outsource':'', 'checkBox_noproduction':'', 'checkBox_others':'',
-    'checkBox_all':'', 'checkBox_year': '','checkBox_half_year':'','checkBox_today':'', 'checkBox_rinten': '',
+    'checkBox_all':'', 'checkBox_year': '','checkBox_half_year':'','checkBox_three_month':'','checkBox_one_month':'',
+    'checkBox_today':'', 'checkBox_rinten': '',
     'checkBox_kikuhan':'', 'checkBox_kikuzen':'', 'checkBox_pod':'', 'checkBox_futou':'',
     'checkBox_inkjet':'', 'checkBox_print_multi':'', 'checkBox_print_meishi': '', 'checkBox_noprint':'',
     'checkBox_print_outsource':'', 'checkBox_print_others': '', 'checkBox_shinohara': '', 'form':None}
@@ -24,6 +25,8 @@ def index(request):
     params['checkBox_all'] = 'checkBox_all' in request.POST
     params['checkBox_year'] = 'checkBox_year' in request.POST
     params['checkBox_half_year'] = 'checkBox_half_year' in request.POST
+    params['checkBox_three_month'] = 'checkBox_three_month' in request.POST
+    params['checkBox_one_month'] = 'checkBox_one_month' in request.POST
     params['checkBox_today'] = 'checkBox_today' in request.POST
 
     params['orderNum'] = request.POST['orderNum']
@@ -63,7 +66,8 @@ def index(request):
       'checkBox_aeon':params['checkBox_aeon'],'checkBox_outsource':params['checkBox_outsource'],
       'checkBox_noproduction':params['checkBox_noproduction'],'checkBox_others':params['checkBox_others'],
       'checkBox_all':params['checkBox_all'], 'checkBox_year':params['checkBox_year'],
-      'checkBox_half_year':params['checkBox_half_year'],'checkBox_today':params['checkBox_today'],
+      'checkBox_half_year':params['checkBox_half_year'],'checkBox_three_month':params['checkBox_three_month'],
+      'checkBox_one_month':params['checkBox_one_month'],'checkBox_today':params['checkBox_today'],
       'checkBox_rinten':params['checkBox_rinten'],
       'checkBox_kikuhan':params['checkBox_kikuhan'],'checkBox_kikuzen':params['checkBox_kikuzen'],
       'checkBox_pod':params['checkBox_pod'],'checkBox_futou':params['checkBox_futou'],

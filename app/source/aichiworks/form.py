@@ -17,7 +17,19 @@ class queryForm(forms.Form):
     label='半年',
     label_suffix='',
     required=False,
+    initial=False
+  )
+  checkBox_three_month = forms.BooleanField(
+    label='3ヶ月',
+    label_suffix='',
+    required=False,
     initial=True
+  )
+  checkBox_one_month = forms.BooleanField(
+    label='1ヶ月',
+    label_suffix='',
+    required=False,
+    initial=False
   )
   checkBox_today = forms.BooleanField(
     label='今日',
